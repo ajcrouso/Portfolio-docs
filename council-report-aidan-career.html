@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Council Report — Aidan Career Path</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0d0d0d;
+    --surface: #141414;
+    --surface2: #1c1c1c;
+    --border: #2a2a2a;
+    --accent: #e8c44a;
+    --accent2: #c0392b;
+    --text: #e8e4dc;
+    --muted: #888;
+    --green: #4caf7d;
+    --red: #e05a4a;
+    --blue: #5a8fe0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  .grain {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  .wrap { max-width: 820px; margin: 0 auto; padding: 60px 32px; position: relative; z-index: 1; }
+
+  .header { margin-bottom: 64px; }
+
+  .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.1;
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    border-left: 2px solid var(--border);
+    padding-left: 16px;
+  }
+
+  .verdict-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 2px;
+    padding: 40px;
+    margin-bottom: 40px;
+  }
+
+  .verdict-card h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 24px;
+    color: var(--accent);
+  }
+
+  .verdict-card p { margin-bottom: 16px; font-size: 15px; }
+  .verdict-card p:last-child { margin-bottom: 0; }
+
+  .big-verdict {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(18px, 3vw, 26px);
+    line-height: 1.4;
+    color: var(--text);
+    border-left: 3px solid var(--accent);
+    padding: 24px 28px;
+    margin: 32px 0;
+    background: rgba(232, 196, 74, 0.04);
+  }
+
+  .one-thing {
+    background: var(--accent);
+    color: #0d0d0d;
+    padding: 32px 40px;
+    border-radius: 2px;
+    margin-bottom: 40px;
+  }
+
+  .one-thing .label { color: rgba(0,0,0,0.5); margin-bottom: 12px; }
+  .one-thing p { font-size: 17px; font-weight: 500; line-height: 1.5; color: #0d0d0d; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+
+  .signal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 28px;
+  }
+
+  .signal-card h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .signal-card.agree h3 { color: var(--green); }
+  .signal-card.clash h3 { color: var(--red); }
+  .signal-card.blind h3 { color: var(--blue); }
+
+  .signal-card ul { list-style: none; padding: 0; }
+  .signal-card ul li {
+    font-size: 14px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .signal-card ul li:last-child { border-bottom: none; }
+  .signal-card ul li::before { content: '—'; color: var(--muted); flex-shrink: 0; margin-top: 1px; }
+
+  .roadmap { margin-bottom: 40px; }
+  .roadmap h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 28px;
+    color: var(--text);
+  }
+
+  .phase {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  .phase::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 44px;
+    bottom: -8px;
+    width: 1px;
+    background: var(--border);
+  }
+  .phase:last-child::before { display: none; }
+
+  .phase-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .phase-dot.now { border-color: var(--accent); color: var(--accent); background: rgba(232,196,74,0.08); }
+  .phase-dot.p1 { border-color: var(--green); color: var(--green); }
+  .phase-dot.p2 { border-color: var(--blue); color: var(--blue); }
+  .phase-dot.p3 { border-color: var(--muted); color: var(--muted); }
+
+  .phase-content { padding-bottom: 32px; flex: 1; }
+  .phase-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .phase-dot.now + .phase-content .phase-title { color: var(--accent); }
+  .phase-dot.p1 + .phase-content .phase-title { color: var(--green); }
+  .phase-dot.p2 + .phase-content .phase-title { color: var(--blue); }
+  .phase-dot.p3 + .phase-content .phase-title { color: var(--muted); }
+
+  .phase-content ul { list-style: none; padding: 0; }
+  .phase-content ul li {
+    font-size: 14px;
+    color: var(--text);
+    padding: 4px 0;
+    display: flex;
+    gap: 10px;
+  }
+  .phase-content ul li::before { content: '›'; color: var(--muted); }
+
+  details {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    margin-bottom: 12px;
+  }
+
+  summary {
+    padding: 18px 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    list-style: none;
+    user-select: none;
+  }
+
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; font-size: 18px; color: var(--accent); }
+  details[open] summary::after { content: '−'; }
+  details[open] summary { color: var(--text); border-bottom: 1px solid var(--border); }
+
+  .advisor-label {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-right: 8px;
+  }
+
+  .advisor-label.contrarian { background: rgba(224,90,74,0.15); color: var(--red); }
+  .advisor-label.principles { background: rgba(90,143,224,0.15); color: var(--blue); }
+  .advisor-label.expansionist { background: rgba(76,175,125,0.15); color: var(--green); }
+  .advisor-label.outsider { background: rgba(232,196,74,0.15); color: var(--accent); }
+  .advisor-label.executor { background: rgba(136,136,136,0.15); color: var(--muted); }
+
+  .advisor-body { padding: 24px; font-size: 14px; line-height: 1.75; color: var(--text); }
+  .advisor-body p { margin-bottom: 12px; }
+  .advisor-body p:last-child { margin-bottom: 0; }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    margin-top: 48px;
+    color: var(--text);
+  }
+
+  .feasibility-bar {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 28px 32px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .feasibility-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    white-space: nowrap;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    width: 72%;
+    background: linear-gradient(90deg, var(--green), var(--accent));
+    border-radius: 3px;
+    animation: fillBar 1.2s ease-out forwards;
+  }
+
+  @keyframes fillBar {
+    from { width: 0; }
+    to { width: 72%; }
+  }
+
+  .feasibility-pct {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 600px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .feasibility-bar { flex-wrap: wrap; }
+    .wrap { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="wrap">
+
+  <div class="header">
+    <div class="label">Council Report — Career Feasibility</div>
+    <h1>Honda → <em>West Coast R&D</em><br>in 3–4 Years</h1>
+    <div class="meta">
+      Subject: Aidan Crouso &nbsp;|&nbsp; 5 Advisors &nbsp;|&nbsp; Peer Review Complete &nbsp;|&nbsp; April 2026
+    </div>
+  </div>
+
+  <div class="feasibility-bar">
+    <div class="feasibility-label">Feasibility</div>
+    <div class="bar-track"><div class="bar-fill"></div></div>
+    <div class="feasibility-pct">Yes — if</div>
+  </div>
+
+  <!-- CHAIRMAN VERDICT -->
+  <div class="verdict-card">
+    <h2>Chairman's Verdict</h2>
+
+    <div class="big-verdict">
+      The route is genuinely feasible. Not guaranteed, not easy — but the raw ingredients are better than average for someone 22 years old. The domain overlap between FD3 exterior plastics/glass/mechanisms and consumer hardware is real and specific. The risk isn't capability. The risk is complacency.
+    </div>
+
+    <p>The council reached near-unanimous agreement on one thing: the comfort trap at Honda is the single most likely way this plan fails. Not lack of skill, not portfolio gaps, not competition — it's waking up at year 3 having done great work at Honda and nothing else, and realizing the window has narrowed.</p>
+
+    <p>The First Principles reframe that emerged is the most strategically important insight from this session: the optimal path is <strong>Honda → EV startup (Rivian/Lucid) → Apple</strong>, not a direct jump. Each step has near-zero domain translation cost. The three-step path is actually faster than trying to force a single leap.</p>
+
+    <p>The Outsider flagged something every other advisor missed: the Design Thinking minor is currently invisible in the portfolio. It's either the most underdeveloped asset in the plan, or evidence that it was decorative. It needs to become real — and the UV Food Storage capstone is the vehicle for that.</p>
+
+    <p>The financial situation is a hidden accelerant the council underweighted. Zero rent plus $85k year-one total comp means the constraint isn't money — it's intentionality. Conference travel, prototype materials, a 3D printer — all funded. The question is whether that slack gets used deliberately or absorbed by lifestyle creep.</p>
+  </div>
+
+  <!-- WHERE THEY AGREE / CLASH -->
+  <div class="grid-2">
+    <div class="signal-card agree">
+      <h3>Where the Council Agrees</h3>
+      <ul>
+        <li>Comfort trap at Honda is the #1 failure mode — not competition or skill gaps</li>
+        <li>CATIA V5 surfacing at 22 is a genuine differentiator, not just a line item</li>
+        <li>Self-directed projects must start before July 13 — not after settling in</li>
+        <li>The UV Food Storage module is the most portfolio-relevant existing work</li>
+        <li>FD3 plastics/glass/mechanisms maps directly to consumer hardware — real overlap</li>
+      </ul>
+    </div>
+    <div class="signal-card clash">
+      <h3>Where the Council Clashes</h3>
+      <ul>
+        <li><strong>Direct vs. staged:</strong> Contrarian says Honda → Apple is too big a jump. Expansionist says talent crunch makes it more achievable than it looks. Resolution: staged (Honda → EV → Apple) is safer but direct is possible with aggressive portfolio work</li>
+        <li><strong>Timeline:</strong> 3 years requires near-perfect execution. 4–5 is more realistic for most people. Aidan's self-awareness gives him a head start but doesn't eliminate the execution risk</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="signal-card blind" style="margin-bottom: 40px;">
+    <h3>Blind Spots the Council Caught</h3>
+    <ul>
+      <li>The Design Thinking minor is completely invisible in the current portfolio — either underdeveloped or decorative. Apple will notice this immediately</li>
+      <li>Financial runway (zero rent + $85k) is an undervalued accelerant — covers conference travel, prototyping, relocation. This is real fuel</li>
+      <li>New-job energy drain is real — first 6 months at Honda will be absorbing. The Executor's timeline doesn't fully account for this</li>
+      <li>The UV Food Storage capstone, finished and documented properly, could be the consumer product bridge piece before the job even starts</li>
+    </ul>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="roadmap">
+    <h2 class="section-title">Preparation Roadmap</h2>
+
+    <div class="phase">
+      <div class="phase-dot now">NOW</div>
+      <div class="phase-content">
+        <div class="phase-title">Before July 13 — The Window</div>
+        <ul>
+          <li>Finish the UV Food Storage capstone and document it like a product case study — lead with the human problem, not the engineering constraints</li>
+          <li>Photograph it properly. Write 400 words about what you learned about designing for a user, not a spec</li>
+          <li>Pick one additional small personal project and start it — even just the CAD. The goal is to have something in progress when Honda starts</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-dot p1">Y1</div>
+      <div class="phase-content">
+        <div class="phase-title">Month 1–12 — Absorb and Build Foundation</div>
+        <ul>
+          <li>Do exceptional work at FD3 — learn CATIA surfacing on actual exterior components, absorb the DFM culture</li>
+          <li>Months 1–6: zero networking, full Honda focus. Get grounded first</li>
+          <li>Month 6+: one personal project on nights/weekends. Small mechanism, consumer scale, tight tolerances. Something you can hold</li>
+          <li>Document everything with aesthetic intent — not just "what it does" but "how it feels and why"</li>
+          <li>First SAE World Congress — observe, collect contacts, get comfortable</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-dot p2">Y2</div>
+      <div class="phase-content">
+        <div class="phase-title">Month 12–24 — Build the Bridge</div>
+        <ul>
+          <li>Two portfolio pieces live — one from Honda (FD3 work), one self-directed consumer-scale project</li>
+          <li>LinkedIn presence that explicitly bridges automotive and consumer hardware domains</li>
+          <li>SAE World Congress with intention — two target companies, three target engineers, follow up within 48 hours</li>
+          <li>Start conversations with Rivian and Lucid engineers — not job seeking, just existing in their orbit</li>
+          <li>Get on GitHub. Even one project. The absence is a red flag at consumer tech companies</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-dot p3">Y3</div>
+      <div class="phase-content">
+        <div class="phase-title">Month 24–36 — Apply</div>
+        <ul>
+          <li>Resume tells a coherent story: automotive precision → consumer product thinking → mechanisms/glass/plastics at scale</li>
+          <li>Portfolio has 3 pieces showing engineering execution + aesthetic intent</li>
+          <li>2–3 warm contacts at target companies who know your name and work</li>
+          <li>Primary target: Rivian or Lucid (near-zero domain translation). Secondary: Apple (requires portfolio bridge)</li>
+          <li>If portfolio bridge isn't strong enough for Apple at year 3 — Rivian/Lucid first, then Apple at year 4–5 from inside the consumer space</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE ONE THING -->
+  <div class="one-thing">
+    <div class="label">The One Thing to Do First</div>
+    <p>Finish the UV Food Storage capstone this month — not as a school project, but as a consumer product. Write the case study leading with the user problem. Photograph it. Publish it. That's the bridge piece that makes everything else in this plan credible, and it needs to exist before July 13.</p>
+  </div>
+
+  <!-- ADVISOR RESPONSES -->
+  <div class="section-title">Advisor Responses</div>
+
+  <details>
+    <summary><span class="advisor-label contrarian">Contrarian</span> The Comfort Trap Is the Default Outcome</summary>
+    <div class="advisor-body">
+      <p>The comfort trap isn't a risk — it's the default outcome. Honda is a fortress of incremental progression: annual reviews, clear promotion ladders, colleagues who've been there 15 years, a manager who likes you. The path of least resistance is Honda year 3, Honda year 5, Honda year 8. The 3–4 year window closes quietly, not dramatically.</p>
+      <p>The Apple gap is more brutal than it sounds. Apple Hardware MDE roles get hundreds of applications from people with Stanford/CMU/MIT ME degrees and 2–3 years of consumer product experience at companies like Logitech, Bose, or Snap. Aidan's Honda exterior plastics experience is genuinely relevant, but the competition isn't other auto MEs — it's product engineers who've already made the transition. He'd be competing against people one step ahead on the exact path he's trying to start.</p>
+      <p>The self-directed project gap is the real problem. Summer 2026 is 6–8 weeks — not enough time to build a portfolio piece that moves the needle at Apple. And starting a new job takes real energy — the first 6 months will consume most creative bandwidth. The window is narrower than it appears. The 3–4 year timeline is optimistic unless he treats portfolio building as a second job starting day one.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="advisor-label principles">First Principles</span> You're Asking the Wrong Question</summary>
+    <div class="advisor-body">
+      <p>Strip this back: what does Aidan actually want? He wants to keep making new things for the rest of his career, at a company where the work is excellent and the product matters to people. That's the real goal. Apple and West Coast are the current labels he's attached to it.</p>
+      <p>That reframe matters because it opens up the strategy. The question isn't "how do I get to Apple in 3–4 years?" It's "what's the fastest path to excellent new product development at a company that takes quality seriously?"</p>
+      <p>Rivian and Lucid are actually better first moves than Apple for that goal. The domain translation is nearly zero. The culture is product-obsessed. He'd be doing genuine R&D on new vehicles. And critically, landing at Rivian or Lucid at year 2–3 then opens Apple as a subsequent move with actual consumer product company experience on his resume. The ladder is Honda → EV startup → Apple, not Honda → Apple. Trying to skip the middle rung is possible but harder and riskier.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="advisor-label expansionist">Expansionist</span> Everyone's Thinking Too Small</summary>
+    <div class="advisor-body">
+      <p>The FD3 exterior plastics + glass + motion mechanisms combination is genuinely rare for someone 22, and CATIA V5 surfacing at that age is a real differentiator. That's not a "decent foundation" — that's a head start most people don't get.</p>
+      <p>The West Coast hardware scene is in a talent crunch. Apple, Google, Meta Reality Labs, and the EV companies are all competing for the same pool of mechanism and enclosure engineers. Someone who can bridge automotive manufacturing rigor and consumer product thinking is exactly the hire they can't easily find.</p>
+      <p>The bigger opportunity is positioning early and loudly. If Aidan builds 2–3 strong self-directed projects in the next 18 months and shows up at SAE and RAPID conferences as someone who thinks across domains, he becomes a known quantity before he even applies. The UV Food Storage capstone is the seed of a consumer product portfolio — finishing it properly could be the most valuable thing he does before July.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="advisor-label outsider">Outsider</span> The Design Thinking Minor Is Invisible</summary>
+    <div class="advisor-body">
+      <p>Looking at this from the outside: a 22-year-old with two automotive co-ops, a job at Honda, and a portfolio of stamped brackets and roller redesigns wants to work at Apple in 3 years. The honest question is: why would Apple hire this person over someone already in consumer electronics?</p>
+      <p>The answer has to be "because of something specific I can do that they can't easily find." That thing is CATIA V5 surfacing + automotive-grade DFM rigor applied to consumer product scale. That's a real answer, but it's invisible in the current portfolio and narrative.</p>
+      <p>The Design Thinking minor is mentioned once and never referenced again. If someone has a Design Thinking minor and their portfolio has zero evidence of it, the honest read is that the minor was a box to check. Apple will notice that immediately. The UV Food Storage module is close — it's the only project with a human at the center — but it's incomplete and framed as a school project, not a product. That needs to change.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="advisor-label executor">Executor</span> Stop Planning. Start Executing.</summary>
+    <div class="advisor-body">
+      <p>Stop planning and start executing. Before July 13: finish the UV Food Storage capstone properly. Photograph it like a product. Write a case study leading with the user problem, not the engineering constraints. That's one portfolio piece done before the job starts.</p>
+      <p>Months 1–6 at Honda: do exceptional work and learn CATIA surfacing on actual exterior components. That's the differentiating skill. Don't start networking yet — get grounded first. Month 6–12: one personal project on nights and weekends. Small mechanism. Consumer scale. Tight tolerances. Something you can hold.</p>
+      <p>Month 12: first SAE World Congress with intention — two target companies, three target engineers, follow up within 48 hours every time. Month 18–24: LinkedIn presence showing cross-domain thinking, two portfolio pieces live, start conversations at Rivian and Lucid. Month 30–36: apply. The resume by then tells a coherent story.</p>
+      <p>The one thing that kills this plan: waiting until "things settle down" at Honda before starting personal work. They never settle down. Start before July.</p>
+    </div>
+  </details>
+
+  <footer>
+    <span>Council Report — Aidan Crouso Career Path</span>
+    <span>April 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>
