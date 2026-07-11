@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aidan Crouso — Mechanical Engineer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0d0d0d;
+    --surface: #141414;
+    --surface2: #1c1c1c;
+    --border: #2a2a2a;
+    --accent: #e8c44a;
+    --accent2: #c0392b;
+    --text: #e8e4dc;
+    --muted: #888;
+    --green: #4caf7d;
+    --blue: #5a8fe0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  .grain {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  /* ---- Top navigation ---- */
+  .nav {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 32px;
+    background: rgba(13,13,13,0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav .brand {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .nav .links { display: flex; gap: 24px; }
+  .nav .links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; transition: color 0.2s;
+  }
+  .nav .links a:hover { color: var(--text); }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+
+  /* ---- Hero ---- */
+  .hero { padding: 100px 0 80px; }
+  .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(38px, 7vw, 68px);
+    line-height: 1.05; font-weight: 400; margin-bottom: 24px;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero .tagline {
+    font-size: clamp(17px, 2.5vw, 21px);
+    color: var(--text); max-width: 620px; margin-bottom: 36px;
+  }
+  .hero .sub { color: var(--muted); font-size: 15px; max-width: 620px; }
+
+  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: none; padding: 14px 24px; border-radius: 2px;
+    transition: transform 0.15s, background 0.2s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn.primary { background: var(--accent); color: #0d0d0d; font-weight: 500; }
+  .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn.ghost:hover { border-color: var(--muted); }
+
+  /* ---- Section shell ---- */
+  section.block { padding: 56px 0; border-top: 1px solid var(--border); }
+  .sec-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 28px;
+  }
+  .sec-label span { color: var(--accent); }
+  h2.sec {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(26px, 4vw, 36px); font-weight: 400;
+    line-height: 1.2; margin-bottom: 24px;
+  }
+  .prose p { font-size: 16px; margin-bottom: 16px; max-width: 680px; }
+  .prose p:last-child { margin-bottom: 0; }
+
+  /* ---- Skills ---- */
+  .skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+  .skill-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-top: 3px solid var(--accent); border-radius: 2px; padding: 24px;
+  }
+  .skill-card h3 {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 14px;
+  }
+  .skill-card ul { list-style: none; }
+  .skill-card li {
+    font-size: 14px; padding: 6px 0; border-bottom: 1px solid var(--border);
+    display: flex; gap: 10px;
+  }
+  .skill-card li:last-child { border-bottom: none; }
+  .skill-card li::before { content: '—'; color: var(--muted); flex-shrink: 0; }
+
+  /* ---- Projects ---- */
+  .project {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 2px; padding: 32px; margin-bottom: 20px;
+    display: grid; grid-template-columns: 160px 1fr; gap: 28px; align-items: start;
+  }
+  .project .thumb {
+    background: var(--surface2); border: 1px dashed var(--border);
+    border-radius: 2px; aspect-ratio: 1; display: flex;
+    align-items: center; justify-content: center; text-align: center;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 12px;
+  }
+  .project h3 {
+    font-family: 'DM Serif Display', serif; font-size: 22px;
+    font-weight: 400; margin-bottom: 6px;
+  }
+  .project .kicker {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 14px;
+  }
+  .project p { font-size: 15px; margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--muted); border: 1px solid var(--border);
+    padding: 4px 10px; border-radius: 2px;
+  }
+
+  /* ---- Roadmap feature card ---- */
+  .roadmap-feature {
+    background: linear-gradient(135deg, rgba(232,196,74,0.08), rgba(232,196,74,0.02));
+    border: 1px solid var(--border); border-left: 3px solid var(--accent);
+    border-radius: 2px; padding: 40px;
+    display: flex; flex-wrap: wrap; align-items: center;
+    justify-content: space-between; gap: 24px;
+  }
+  .roadmap-feature h2 {
+    font-family: 'DM Serif Display', serif; font-size: 26px;
+    font-weight: 400; margin-bottom: 10px;
+  }
+  .roadmap-feature p { font-size: 15px; color: var(--muted); max-width: 460px; }
+
+  /* ---- Contact ---- */
+  .contact-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
+  .contact-links a {
+    font-family: 'DM Mono', monospace; font-size: 13px;
+    color: var(--text); text-decoration: none;
+    border-bottom: 1px solid var(--border); padding-bottom: 2px; transition: border-color 0.2s;
+  }
+  .contact-links a:hover { border-color: var(--accent); }
+
+  footer {
+    border-top: 1px solid var(--border); padding: 40px 0 60px;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--muted); letter-spacing: 0.08em;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 640px) {
+    .nav .links { gap: 16px; }
+    .nav .links a.hide-sm { display: none; }
+    .project { grid-template-columns: 1fr; }
+    .project .thumb { aspect-ratio: 16/9; }
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<nav class="nav">
+  <span class="brand">Aidan Crouso</span>
+  <div class="links">
+    <a href="#about">About</a>
+    <a href="#skills" class="hide-sm">Expertise</a>
+    <a href="#work">Work</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="label">Mechanical Engineer · Consumer Hardware</div>
+    <h1>Precision engineering,<br><em>designed for people.</em></h1>
+    <p class="tagline">I design exterior systems, mechanisms, and enclosures — bringing automotive-grade manufacturing rigor to products people actually hold.</p>
+    <p class="sub">Currently building exterior plastics, glass, and motion mechanisms on the Honda FD3 platform. CATIA V5 surfacing, DFM, and a design-thinking approach to hardware.</p>
+    <div class="cta-row">
+      <a href="#roadmap" class="btn primary">View Career Roadmap →</a>
+      <a href="#work" class="btn ghost">See the Work</a>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section class="block" id="about">
+    <div class="sec-label"><span>01</span> — About</div>
+    <h2 class="sec">Bridging automotive rigor and consumer product thinking.</h2>
+    <div class="prose">
+      <p>I'm a mechanical engineer focused on exterior components and mechanisms — the parts of a product that a person sees, touches, and judges in the first three seconds. My background is in automotive: exterior plastics, glass, and motion systems on the Honda FD3 platform, where tolerances are tight and the manufacturing bar is unforgiving.</p>
+      <p>My goal is to carry that discipline into consumer hardware — where the same skills in surfacing, tolerancing, and design-for-manufacturing decide whether a product feels premium or cheap. I care as much about how something feels and why as about what it does.</p>
+      <p><em style="color:var(--muted)">[ Replace this with your own 2–3 sentences — this is placeholder copy drawn from your council report. ]</em></p>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="block" id="skills">
+    <div class="sec-label"><span>02</span> — Expertise</div>
+    <h2 class="sec">What I bring to a hardware team.</h2>
+    <div class="skill-grid">
+      <div class="skill-card">
+        <h3>CAD &amp; Surfacing</h3>
+        <ul>
+          <li>CATIA V5 (Class-A surfacing)</li>
+          <li>Parametric solid modeling</li>
+          <li>Exterior / enclosure design</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <h3>Manufacturing</h3>
+        <ul>
+          <li>Design for Manufacturing (DFM)</li>
+          <li>Injection-molded plastics</li>
+          <li>Glass &amp; motion mechanisms</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <h3>Product &amp; Process</h3>
+        <ul>
+          <li>Design Thinking (minor)</li>
+          <li>Tolerance stack-up / GD&amp;T</li>
+          <li>Prototyping &amp; 3D printing</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="block" id="work">
+    <div class="sec-label"><span>03</span> — Selected Work</div>
+    <h2 class="sec">Projects &amp; case studies.</h2>
+
+    <div class="project">
+      <div class="thumb">Add photo<br>of your prototype</div>
+      <div>
+        <div class="kicker">Capstone · Consumer Product</div>
+        <h3>UV Food Storage</h3>
+        <p>A consumer storage concept centered on a real human problem, not just an engineering spec. The bridge piece between automotive precision and consumer product design — documented as a product case study, leading with the user.</p>
+        <div class="tags">
+          <span class="tag">Design Thinking</span>
+          <span class="tag">CAD</span>
+          <span class="tag">Prototyping</span>
+          <span class="tag">User-Centered</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="thumb">Add photo<br>or render</div>
+      <div>
+        <div class="kicker">Honda FD3 · Exterior Systems</div>
+        <h3>Exterior Plastics &amp; Mechanisms</h3>
+        <p><em style="color:var(--muted)">[ Placeholder — add a project from your Honda work: an exterior component, a mechanism redesign, or a surfacing study. Describe the problem, your role, and the result. ]</em></p>
+        <div class="tags">
+          <span class="tag">CATIA V5</span>
+          <span class="tag">DFM</span>
+          <span class="tag">Exterior Plastics</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="thumb">Add photo<br>or render</div>
+      <div>
+        <div class="kicker">Personal Project</div>
+        <h3>Your Next Build</h3>
+        <p><em style="color:var(--muted)">[ Placeholder — a small consumer-scale mechanism you design on nights/weekends. Something you can hold. Document how it feels and why, not just what it does. ]</em></p>
+        <div class="tags">
+          <span class="tag">Mechanism</span>
+          <span class="tag">Tight Tolerances</span>
+          <span class="tag">Consumer Scale</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="block" id="roadmap">
+    <div class="sec-label"><span>04</span> — Career Roadmap</div>
+    <div class="roadmap-feature">
+      <div>
+        <h2>Honda → West Coast R&amp;D</h2>
+        <p>The full council report: feasibility verdict, advisor responses, blind spots, and a year-by-year preparation roadmap toward consumer hardware R&amp;D.</p>
+      </div>
+      <a href="council-report-aidan-career.html" class="btn primary">Open the Roadmap →</a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="block" id="contact">
+    <div class="sec-label"><span>05</span> — Contact</div>
+    <h2 class="sec">Let's talk hardware.</h2>
+    <div class="prose">
+      <p>Open to conversations about consumer hardware, mechanisms, and exterior systems.</p>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:ajcrouso@gmail.com">ajcrouso@gmail.com</a>
+      <a href="#">LinkedIn ↗ (add link)</a>
+      <a href="#">GitHub ↗ (add link)</a>
+      <a href="#">Resume ↗ (add PDF)</a>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 Aidan Crouso · Mechanical Engineer · Built with GitHub Pages
+  </footer>
+
+</div>
+</body>
+</html>
