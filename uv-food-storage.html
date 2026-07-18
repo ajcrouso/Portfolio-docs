@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A product case study: designing an inductive charging system and a manual-free two-button interface for a UV-C food storage lid. By Aidan Crouso.">
+<title>UV Food Storage — Case Study · Aidan Crouso</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0d0d0d;
+    --surface: #141414;
+    --surface2: #1c1c1c;
+    --border: #2a2a2a;
+    --accent: #e8c44a;
+    --accent2: #c0392b;
+    --text: #e8e4dc;
+    --muted: #888;
+    --green: #4caf7d;
+    --blue: #5a8fe0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-weight: 300;
+    line-height: 1.7; min-height: 100vh;
+  }
+  .grain {
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  .nav {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 32px; background: rgba(13,13,13,0.85);
+    backdrop-filter: blur(8px); border-bottom: 1px solid var(--border);
+  }
+  .nav a.brand {
+    font-family: 'DM Mono', monospace; font-size: 13px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent); text-decoration: none;
+  }
+  .nav a.back {
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; transition: color 0.2s;
+  }
+  .nav a.back:hover { color: var(--text); }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+
+  /* Hero */
+  .cs-hero { padding: 72px 0 40px; }
+  .cs-hero-inner { display: grid; grid-template-columns: 1fr 300px; gap: 48px; align-items: center; }
+  .label {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 18px;
+  }
+  .cs-hero h1 {
+    font-family: 'DM Serif Display', serif; font-size: clamp(40px, 6.5vw, 62px);
+    line-height: 1.05; font-weight: 400; margin-bottom: 20px;
+  }
+  .cs-hero .lead { font-size: clamp(16px, 2.2vw, 19px); color: var(--text); max-width: 560px; }
+  .cs-photo {
+    position: relative; padding: 8px; background: var(--surface);
+    border: 1px solid var(--border); border-top: 3px solid var(--accent);
+    border-radius: 4px; box-shadow: 0 24px 55px rgba(0,0,0,0.5);
+  }
+  .cs-photo img { width: 100%; height: auto; display: block; border-radius: 2px; }
+
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 14px 40px;
+    margin-top: 34px; padding-top: 26px; border-top: 1px solid var(--border);
+  }
+  .meta .m .k {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    display: block; margin-bottom: 4px;
+  }
+  .meta .m .v { font-size: 14px; color: var(--text); }
+
+  /* Section shell */
+  section.block { padding: 52px 0; border-top: 1px solid var(--border); }
+  .sec-label {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 24px;
+  }
+  .sec-label span { color: var(--accent); }
+  h2.sec {
+    font-family: 'DM Serif Display', serif; font-size: clamp(25px, 4vw, 34px);
+    font-weight: 400; line-height: 1.2; margin-bottom: 22px;
+  }
+  .prose p { font-size: 16px; margin-bottom: 16px; max-width: 680px; }
+  .prose p:last-child { margin-bottom: 0; }
+  .prose strong { font-weight: 500; color: #fff; }
+
+  /* Callouts (ownership honesty) */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: linear-gradient(135deg, rgba(232,196,74,0.09), rgba(232,196,74,0.02));
+    padding: 18px 22px; margin: 26px 0; border-radius: 0 3px 3px 0; max-width: 680px;
+  }
+  .callout.team {
+    border-left-color: var(--blue);
+    background: linear-gradient(135deg, rgba(90,143,224,0.10), rgba(90,143,224,0.02));
+  }
+  .callout .k {
+    font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 7px;
+  }
+  .callout.team .k { color: var(--blue); }
+  .callout p { font-size: 15px; margin: 0; }
+
+  /* Figures */
+  figure.fig {
+    margin: 30px 0; background: #ececec;
+    border: 1px solid #cfcfcf; border-radius: 6px;
+    padding: 12px 12px 4px; box-shadow: 0 12px 34px rgba(0,0,0,0.4);
+  }
+  figure.fig img {
+    width: 100%; height: auto; display: block; background: #ececec;
+    border-radius: 3px;
+  }
+  figure.fig figcaption {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.03em; color: #5f5f5f; margin-top: 10px; line-height: 1.5;
+    padding: 6px 4px 8px;
+  }
+  .fig-grid { display: grid; gap: 14px; margin: 30px 0; }
+  .fig-grid.two { grid-template-columns: 1fr 1fr; }
+  .fig-grid.two figure.fig { margin: 0; }
+
+  /* Validation before/after grid */
+  .berries {
+    display: grid; grid-template-columns: auto 1fr 1fr;
+    gap: 12px 14px; align-items: center; max-width: 560px; margin: 28px 0 12px;
+  }
+  .b-col {
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted); text-align: center;
+  }
+  .b-row {
+    display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
+    font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--text);
+  }
+  .uvtag {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--accent); border: 1px solid rgba(232,196,74,0.45);
+    border-radius: 20px; padding: 3px 9px; font-size: 10px; letter-spacing: 0.08em;
+  }
+  .uvtag svg { width: 18px; height: 7px; display: block; }
+  .b-cell {
+    margin: 0; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 5px; padding: 8px;
+  }
+  .b-cell img { width: 100%; height: auto; display: block; border: 1px solid #363636; border-radius: 3px; }
+  .berry-note {
+    font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+    letter-spacing: 0.03em; max-width: 560px; line-height: 1.6; margin-top: 2px;
+  }
+
+  /* Tables */
+  table.dt {
+    width: 100%; border-collapse: collapse; margin: 26px 0;
+    font-size: 14px; max-width: 680px;
+  }
+  table.dt caption {
+    text-align: left; font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 12px;
+  }
+  table.dt th, table.dt td {
+    text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--border);
+  }
+  table.dt thead th {
+    font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted); font-weight: 500;
+  }
+  table.dt td.num, table.dt th.num { font-family: 'DM Mono', monospace; }
+  table.dt tbody tr:last-child td { border-bottom: none; }
+  .yes { color: var(--accent); }
+  .no { color: #d06a5c; }
+  .mine-col { color: var(--accent); }
+
+  /* Satisfaction chart */
+  .chartwrap { max-width: 560px; margin: 26px 0; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 28px; margin-bottom: 22px; }
+  .stat .big {
+    font-family: 'DM Serif Display', serif; font-size: 40px;
+    color: var(--accent); line-height: 1;
+  }
+  .stat .cap {
+    font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); margin-top: 8px; max-width: 150px;
+  }
+  .chart {
+    display: flex; align-items: flex-end; gap: 6px; height: 170px;
+    padding-top: 22px; border-bottom: 1px solid var(--border);
+  }
+  .chart .bar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; }
+  .chart .bar .cnt { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-bottom: 6px; white-space: nowrap; }
+  .chart .bar .fill { width: 100%; background: var(--surface2); border-radius: 2px 2px 0 0; min-height: 2px; }
+  .chart .bar.hot .fill { background: var(--accent); }
+  .chart-x { display: flex; gap: 6px; margin-top: 8px; }
+  .chart-x .xl { flex: 1; text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+  .chart-note { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 12px; letter-spacing: 0.04em; }
+
+  .takeaway {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: clamp(18px, 2.6vw, 22px); line-height: 1.4;
+    color: var(--text); max-width: 640px; margin: 30px 0 6px;
+    padding-left: 20px; border-left: 2px solid var(--accent);
+  }
+
+  footer {
+    border-top: 1px solid var(--border); padding: 44px 0 60px;
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px; align-items: center;
+  }
+  footer .fnote { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
+  footer a.btn {
+    font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase; text-decoration: none; padding: 13px 22px;
+    border-radius: 2px; background: var(--accent); color: #0d0d0d; font-weight: 500;
+  }
+
+  @media (max-width: 760px) {
+    .cs-hero-inner { grid-template-columns: 1fr; gap: 30px; }
+    .cs-photo { order: -1; max-width: 260px; }
+    .fig-grid.two { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<nav class="nav">
+  <a href="index.html" class="brand">Aidan Crouso</a>
+  <a href="index.html#work" class="back">← All Work</a>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="cs-hero">
+    <div class="cs-hero-inner">
+      <div>
+        <div class="label">Case Study · Consumer Product</div>
+        <h1>UV Food Storage</h1>
+        <p class="lead">A UV-C storage lid that slows produce spoilage, with a two-button interface anyone can use without a manual, and an inductive charging system built for a real kitchen counter.</p>
+      </div>
+      <div class="cs-photo">
+        <img src="assets/uv/uv-hero.jpg" alt="The UV Food Storage prototype: a white lid on a glass container with its interface lit up" width="1000" height="1333">
+      </div>
+    </div>
+    <div class="meta">
+      <div class="m"><span class="k">Context</span><span class="v">OSU ME Capstone, 2025–26</span></div>
+      <div class="m"><span class="k">Team</span><span class="v">6 engineers</span></div>
+      <div class="m"><span class="k">My focus</span><span class="v">Charging system · battery validation · interface</span></div>
+      <div class="m"><span class="k">Read</span><span class="v">~5 min</span></div>
+    </div>
+  </header>
+
+  <!-- 1. PROBLEM -->
+  <section class="block">
+    <div class="sec-label"><span>01</span> — The problem</div>
+    <h2 class="sec">The technology was proven. The product was not.</h2>
+    <div class="prose">
+      <p>Roughly a third of global food waste comes from produce spoiling before anyone eats it. In our own survey of 68 people, most said they throw out fruits and vegetables within a week of buying them. UV-C light is a known way to slow that spoilage, and this is where the project gets interesting: we did not start from a blank page.</p>
+      <p>A 2024 team before us had already proven the core technology, extending produce shelf life by up to 20 days with UV-C. But their prototype had a real flaw. Overexposure gave fruit the equivalent of a sunburn, and the device was awkward to actually live with. A patented competitor, EcoLoc, existed too: a single three-minute dose mode, USB-C charging, about a 14-day extension, and no humidity control.</p>
+      <p>So our job was not to invent UV-C food storage. It was to turn a working science experiment into something a person would want on their counter, and to differentiate it from a patent we could not touch. That reframed the whole capstone as a <strong>product design problem</strong>, which is exactly the kind of problem I care about.</p>
+    </div>
+  </section>
+
+  <!-- 2. LEAD: ELECTRONICS INTEGRATION / CHARGING -->
+  <section class="block">
+    <div class="sec-label"><span>02</span> — Electronics integration</div>
+    <h2 class="sec">Charging designed for a kitchen, not a spec sheet.</h2>
+    <div class="prose">
+      <p>The competitor charged over USB-C. On paper that is fine: clear indication, a tactile plug, everyone owns the cable. But picture a kitchen that actually uses these. USB-C means one cable per lid, a tangle of cords on the counter, and only around 20 cycles per charge. For a product meant to sit in a cabinet and get grabbed daily, that is the wrong model.</p>
+    </div>
+
+    <div class="callout">
+      <span class="k">My contribution</span>
+      <p>The inductive charging system was my idea. I proposed replacing per-lid cables with a single dock, and owned that decision through the design.</p>
+    </div>
+
+    <div class="prose">
+      <p>The answer was an inductive charging dock that powers <strong>up to four lids at once</strong>. Each lid drops onto the dock and self-aligns with magnets, so there is no plug to find and no wrong way to set it down. Charge state lives on the lid itself, not on a separate hub, so you can read it at a glance while it sits in the dock.</p>
+      <p>The harder half of this was packaging. Everything that makes the lid smart has to live inside a sealed, dishwasher-safe shell: an Arduino Nano, a 12V battery, four safety switches, the UV-C LEDs, and the perforated boards tying it together. Fitting that into a lid that still latches, seals, and survives a dishwasher was the real integration challenge, and it is the part of the project closest to the electromechanical packaging work I want to keep doing.</p>
+    </div>
+
+    <figure class="fig">
+      <img src="assets/uv/internals.jpg" alt="CAD render of the electronics packed inside the lid" width="859" height="681">
+      <figcaption>Everything sealed inside the lid: Arduino Nano, 12V battery (left), three perf boards, UV-C LEDs, the humidity dial, and the battery-indicator LEDs along the front edge.</figcaption>
+    </figure>
+
+    <div class="fig-grid two">
+      <figure class="fig">
+        <img src="assets/uv/charger-4.jpg" alt="Four lids charging on the inductive dock" width="861" height="598">
+        <figcaption>The dock charges up to four lids at once, each self-aligning with magnets.</figcaption>
+      </figure>
+      <figure class="fig">
+        <img src="assets/uv/charger-2.jpg" alt="Two lids on the inductive charger" width="916" height="601">
+        <figcaption>Charge state is shown on each lid, so there is no separate hub to read.</figcaption>
+      </figure>
+    </div>
+
+    <div class="prose">
+      <p>Runtime came from the battery choice and the three intensity modes. Lower intensity buys far more cycles between charges, which matters for a countertop device that should rarely need docking.</p>
+    </div>
+
+    <table class="dt">
+      <caption>Runtime by intensity mode (per charge)</caption>
+      <thead>
+        <tr><th>Mode</th><th class="num">Runtime</th><th class="num">Three-minute cycles</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Low</td><td class="num">10.8 hr</td><td class="num">216</td></tr>
+        <tr><td>Medium</td><td class="num">6.4 hr</td><td class="num">128</td></tr>
+        <tr><td>High</td><td class="num">4.5 hr</td><td class="num">90</td></tr>
+        <tr><td>EcoLoc (reference)</td><td class="num">—</td><td class="num">~20</td></tr>
+      </tbody>
+    </table>
+
+    <div class="prose">
+      <p>Because the device lives in a refrigerator, I validated the battery where it actually runs. With Ryan Eicher, I tested efficiency in a 35&deg;F environment, using a multimeter to measure the ratio of useful to total output and confirm the runtime numbers held up at fridge temperature rather than only at room temperature.</p>
+    </div>
+
+    <p class="takeaway">A charging decision is a product decision. Inductive charging cost us complexity inside the lid and bought back the thing that actually matters: a device you never have to fight with on the counter.</p>
+  </section>
+
+  <!-- 3. DESIGN LANGUAGE / INTERFACE -->
+  <section class="block">
+    <div class="sec-label"><span>03</span> — Design language</div>
+    <h2 class="sec">An interface you do not need a manual for.</h2>
+    <div class="prose">
+      <p>People do not read manuals for kitchen gadgets. If the device cannot explain itself, it fails. So the whole interface had to communicate through as little as possible: <strong>two buttons and a language of light.</strong></p>
+      <p>A mode button cycles low, medium, and high, and the indicator LEDs blink once, twice, or three times to confirm. A start button blinks at the beginning of a cycle, flashes while it runs, and turns green when it finishes. A three-segment battery indicator shows charge in thirds, pulses red while charging, and holds solid green when full. A separate humidity dial gives open and closed guidance depending on what you are storing. Nothing on the device needs a word of text.</p>
+    </div>
+
+    <figure class="fig">
+      <img src="assets/uv/render-front.jpg" alt="Front view render of the full lid design" width="895" height="526">
+      <figcaption>Two buttons and a humidity dial carry the entire interface. Everything else is communicated with light.</figcaption>
+    </figure>
+
+    <div class="prose">
+      <p>To check that this actually worked, we ran a usability protocol with 10 first-time users. We timed how long it took each person to complete a full cycle with <strong>no instructions at all</strong>, logged every error without correcting it, then had them try again after reading the manual. The targets were a first successful cycle in under two minutes cold, and satisfaction of at least 7 out of 10 across every question we asked, including how confident people felt about safety.</p>
+    </div>
+
+    <div class="chartwrap">
+      <div class="stat-row">
+        <div class="stat"><div class="big">9.2</div><div class="cap">Mean safety-confidence rating</div></div>
+        <div class="stat"><div class="big">100%</div><div class="cap">Rated 7 or higher</div></div>
+      </div>
+      <div class="chart" aria-label="Safety confidence ratings, 1 to 10">
+        <div class="bar"><span class="cnt">0</span><div class="fill" style="height:1%"></div></div>
+        <div class="bar"><span class="cnt">0</span><div class="fill" style="height:1%"></div></div>
+        <div class="bar"><span class="cnt">0</span><div class="fill" style="height:1%"></div></div>
+        <div class="bar"><span class="cnt">0</span><div class="fill" style="height:1%"></div></div>
+        <div class="bar"><span class="cnt">0</span><div class="fill" style="height:1%"></div></div>
+        <div class="bar"><span class="cnt">0</span><div class="fill" style="height:1%"></div></div>
+        <div class="bar hot"><span class="cnt">2</span><div class="fill" style="height:33%"></div></div>
+        <div class="bar"><span class="cnt">0</span><div class="fill" style="height:1%"></div></div>
+        <div class="bar hot"><span class="cnt">3</span><div class="fill" style="height:50%"></div></div>
+        <div class="bar hot"><span class="cnt">6</span><div class="fill" style="height:100%"></div></div>
+      </div>
+      <div class="chart-x">
+        <span class="xl">1</span><span class="xl">2</span><span class="xl">3</span><span class="xl">4</span><span class="xl">5</span><span class="xl">6</span><span class="xl">7</span><span class="xl">8</span><span class="xl">9</span><span class="xl">10</span>
+      </div>
+      <div class="chart-note">"How confident are you the device safely protected you from UV-C exposure?" · n = 11</div>
+    </div>
+
+    <div class="callout team">
+      <span class="k">A team effort</span>
+      <p>The interface was the most collaborative part of this project. We came from different engineering backgrounds, and getting the design this simple took a lot of back-and-forth. My biggest lesson was how much of the final product is decided by how clearly a mixed team communicates, not just by any one person's idea.</p>
+    </div>
+
+    <div class="fig-grid two">
+      <figure class="fig">
+        <img src="assets/uv/humidity-open.jpg" alt="Humidity filter in the open position" width="904" height="717">
+        <figcaption>Humidity filter, open.</figcaption>
+      </figure>
+      <figure class="fig">
+        <img src="assets/uv/humidity-closed.jpg" alt="Humidity filter in the closed position" width="904" height="717">
+        <figcaption>Humidity filter, closed. The dial guides which position suits each food type.</figcaption>
+      </figure>
+    </div>
+
+    <p class="takeaway">Communicating every state with two switches, a handful of LEDs, and one dial is a usability decision and a cost decision at the same time. Fewer parts, and a product that still explains itself.</p>
+  </section>
+
+  <!-- 4. SAFETY -->
+  <section class="block">
+    <div class="sec-label"><span>04</span> — Safety architecture</div>
+    <h2 class="sec">Making accidental UV exposure impossible.</h2>
+    <div class="prose">
+      <p>UV-C is effective because it is harmful to living cells, which is the entire point and also the entire risk. A risk analysis of user and component failures pointed at one worst case: a single switch that could let the light run while the lid was open.</p>
+      <p>The resolution was redundancy. <strong>Four compression switches must all engage before a cycle can start</strong>, so no single failure exposes a user, and switch-wear data (about 30% wear at 50,000 presses) supported designing for that margin. A code-level auto shut-off kills the cycle the moment the control loop is interrupted, and the physics helps too: UV-C does not pass through the glass container or the PLA lid, so exposure is contained by the materials themselves. The design was checked against the relevant standards for UV-C safety, batteries, and household appliances (ISO 15858, IEC 62471, IEC 62133, IEC 60335-1), with IP67 as the waterproofing target.</p>
+    </div>
+    <div class="callout team">
+      <span class="k">Credit where it is due</span>
+      <p>This subsystem was led by teammates. I helped wire it up, but the safety architecture is their design work. I am including it because it is central to how the product functions, not because it was mine to claim.</p>
+    </div>
+  </section>
+
+  <!-- 5. DIFFERENTIATION -->
+  <section class="block">
+    <div class="sec-label"><span>05</span> — Differentiation</div>
+    <h2 class="sec">How ours is different from what existed.</h2>
+    <div class="prose">
+      <p>Two decisions did most of the differentiating. Variable intensity, with three modes tuned to how delicate a food is, directly solves the previous team's sunburning problem, where a single dose treated everything the same. And a full electronics module sealed into the lid means the whole thing is dishwasher-safe and stackable, with no separate hub, where the competitor needs one.</p>
+    </div>
+    <table class="dt">
+      <caption>Pairwise comparison</caption>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Previous prototype</th>
+          <th>EcoLoc</th>
+          <th class="mine-col">Ours</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Inductive charging</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td></tr>
+        <tr><td>Runs only when lid is latched</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>Variable intensity modes</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td></tr>
+        <tr><td>Stackable</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td></tr>
+        <tr><td>Dishwasher-safe</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td></tr>
+      </tbody>
+    </table>
+    <div class="fig-grid two">
+      <figure class="fig">
+        <img src="assets/uv/showcase-together.jpg" alt="Lid and container assembled" width="730" height="669">
+        <figcaption>The lid seals to a standard glass container.</figcaption>
+      </figure>
+      <figure class="fig">
+        <img src="assets/uv/showcase-apart.jpg" alt="Lid and container separated" width="730" height="669">
+        <figcaption>All electronics live in the lid, so the container stays a simple, washable vessel.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 6. VALIDATION -->
+  <section class="block">
+    <div class="sec-label"><span>06</span> — Did it work</div>
+    <h2 class="sec">Seven days, treated against control.</h2>
+    <div class="prose">
+      <p>The final test was simple and hard to argue with. We split one batch of raspberries into a treated group and an untreated control, stored them the same way, and photographed both every 24 hours for a week.</p>
+      <p>By day seven the difference was obvious. The treated berries showed minor color change, with no odor and no mold. The control had visible mold colonies, a fermentation smell, and liquid pooling in the tray. We also ran three repeatability trials on each component (the switches, the mode LEDs, the start LED, and the battery indication) to confirm the electronics behaved the same way every time.</p>
+    </div>
+    <div class="berries">
+      <div></div>
+      <div class="b-col">Day 0</div>
+      <div class="b-col">Day 7</div>
+
+      <div class="b-row">
+        <span class="uvtag"><svg viewBox="0 0 24 8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M1 4 Q 4 1.5 7 4 T 13 4 T 19 4 T 23 4"/></svg>UV-C</span>
+        Treated
+      </div>
+      <figure class="b-cell"><img src="assets/uv/test-day0.jpg" alt="Treated raspberries, day 0" width="184" height="249"></figure>
+      <figure class="b-cell"><img src="assets/uv/test-day7.jpg" alt="Treated raspberries, day 7, still firm and mold-free" width="184" height="249"></figure>
+
+      <div class="b-row">Control</div>
+      <figure class="b-cell"><img src="assets/uv/control-day0.jpg" alt="Untreated raspberries, day 0" width="184" height="249"></figure>
+      <figure class="b-cell"><img src="assets/uv/control-day7.jpg" alt="Untreated raspberries, day 7, mold and breakdown" width="184" height="249"></figure>
+    </div>
+    <p class="berry-note">Same batch, same storage, photographed across seven days. Read each row left to right to follow the change over time. Top row treated with UV-C, bottom row left untreated. By day 7 the treated berries stayed firm with no mold or odor, while the control broke down with visible mold and seepage.</p>
+  </section>
+
+  <!-- 7. RETROSPECTIVE -->
+  <section class="block">
+    <div class="sec-label"><span>07</span> — What I took from it</div>
+    <h2 class="sec">What I would carry into the next one.</h2>
+    <div class="prose">
+      <p>The clearest lesson was about people. Working with engineers from very different backgrounds taught me how much depends on conveying an idea clearly, and how a good design usually comes out of constructive disagreement rather than one person being right. I also worked directly with purchasing for the first time, and learned how to navigate those cross-functional relationships to actually get parts in hand.</p>
+      <p>Technically, this was a big step in electronics for me. I came in with very little hardware experience, and this was the first time I ever soldered. Getting an embedded system to behave reliably, then packaging it into a sealed lid, is a large part of why I want to keep doing electromechanical product work.</p>
+      <p>It also honestly reinforced how much I care about the small details and about designing around the user rather than the spec. On the budget side, we came in at $316.90 against a $222.90 proposal, with the circuit alone running from an estimated $68 to $162. The overrun was a lesson in how easily an electronics bill of materials creeps once you start adding redundancy and boards.</p>
+      <p>If I picked this up again, the next moves are clear: real IP67 or IP68 waterproofing with membrane switches and sealed UV-C bulbs, dosing tuned per food type, and cycles-per-day optimization so the device runs only as often as it needs to.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span class="fnote">© 2026 Aidan Crouso · UV Food Storage Case Study</span>
+    <a href="index.html#work" class="btn">← Back to all work</a>
+  </footer>
+
+</div>
+</body>
+</html>
