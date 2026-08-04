@@ -212,8 +212,15 @@
   }
   .contact-links a:hover { border-color: var(--accent); }
 
-  footer {
-    border-top: 1px solid var(--border); padding: 40px 0 60px;
+  footer { border-top: 1px solid var(--border); padding: 40px 0 60px; }
+  .footer-nav { display: flex; flex-wrap: wrap; gap: 22px; margin-bottom: 16px; }
+  .footer-nav a {
+    font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text); text-decoration: none;
+    border-bottom: 1px solid var(--border); padding-bottom: 3px; transition: border-color 0.2s;
+  }
+  .footer-nav a:hover { border-color: var(--accent); }
+  .footer-copy {
     font-family: 'DM Mono', monospace; font-size: 11px;
     color: var(--muted); letter-spacing: 0.08em;
   }
@@ -344,7 +351,12 @@
   </section>
 
   <footer>
-    © 2026 Aidan Crouso · Mechanical Engineer · Built with GitHub Pages
+    <div class="footer-nav">
+      <a href="experience.html">Experience</a>
+      <a href="inspiration.html">Design Inspiration</a>
+      <a href="assets/Aidan_Crouso_Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+    </div>
+    <div class="footer-copy">© 2026 Aidan Crouso · Mechanical Engineer · Built with GitHub Pages</div>
   </footer>
 
 </div>
