@@ -8,128 +8,165 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>UV Food Storage — Case Study · Aidan Crouso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=Shantell+Sans:wght@500;600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
-
-  :root {
-    --bg:#0d0d0d; --surface:#141414; --surface2:#1c1c1c; --border:#2a2a2a;
-    --accent:#e8c44a; --accent2:#c0392b; --text:#e8e4dc; --muted:#888;
-    --green:#4caf7d; --blue:#5a8fe0;
+  :root{
+    --paper:#EDE7D8;--paper-2:#E4DCC8;--card:#FBF8EF;--ink:#2A2620;--graphite:#6E6A5E;
+    --line:#D6CEB8;--grid:#E1D9C4;--pencil:#C2472F;--blue:#3B6B86;--maxw:clamp(900px,80vw,1240px);
+    --tick-m:rgba(42,38,32,.18);--tick-M:rgba(42,38,32,.42);
   }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-behavior:smooth; }
-  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; font-weight:300; line-height:1.65; }
-  .grain { position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:0; opacity:0.4; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-serif;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,44px);position:relative;z-index:2}
 
-  .nav { position:sticky; top:0; z-index:10; display:flex; justify-content:space-between; align-items:center; padding:20px 32px; background:rgba(13,13,13,0.85); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); }
-  .nav a.brand { font-family:'DM Mono',monospace; font-size:13px; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); text-decoration:none; }
-  .nav a.back { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; }
-  .nav a.back:hover { color:var(--text); }
-  .nav .links { display:flex; gap:22px; }
-  .nav .links a { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; }
-  .nav .links a:hover { color:var(--text); }
-  @media (max-width:520px){ .nav .links { gap:14px; } }
+  .desk{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:30px 30px}
+  .desk::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 30%,rgba(237,231,216,.25),rgba(237,231,216,.7))}
+  .desk-objects{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+  .tool{position:absolute;color:var(--graphite);opacity:.28}
+  .frame{position:fixed;inset:0;z-index:40;pointer-events:none}
+  .frame i{position:absolute;display:block}
+  .frame .t,.frame .b{left:0;right:0;height:13px;
+    background-image:repeating-linear-gradient(90deg,var(--tick-M) 0 1px,transparent 1px 60px),repeating-linear-gradient(90deg,var(--tick-m) 0 1px,transparent 1px 12px)}
+  .frame .t{top:0;border-bottom:1px solid var(--line)}
+  .frame .b{bottom:0;border-top:1px solid var(--line)}
+  .frame .l,.frame .r{top:0;bottom:0;width:13px;
+    background-image:repeating-linear-gradient(0deg,var(--tick-M) 0 1px,transparent 1px 60px),repeating-linear-gradient(0deg,var(--tick-m) 0 1px,transparent 1px 12px)}
+  .frame .l{left:0;border-right:1px solid var(--line)}
+  .frame .r{right:0;border-left:1px solid var(--line)}
 
-  .wrap { max-width:900px; margin:0 auto; padding:0 32px; position:relative; z-index:1; }
+  header.bar{position:relative;z-index:20;background:transparent}
+  .bar-in{max-width:var(--maxw);margin:0 auto;padding:16px clamp(20px,5vw,44px) 0}
+  .navbox{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 24px;padding-bottom:13px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='4' viewBox='0 0 80 4'%3E%3Cpath d='M0 2 Q20 1 40 2 T80 2' fill='none' stroke='%236E6A5E' stroke-opacity='0.55' stroke-width='1.1'/%3E%3C/svg%3E");background-repeat:repeat-x;background-position:left bottom;background-size:80px 4px}
+  .mark{font-family:'Shantell Sans',cursive;font-weight:600;font-size:24px;color:var(--ink);line-height:1;transform:rotate(-1.5deg)}
+  .nav{display:flex;gap:6px 20px;align-items:center;flex-wrap:wrap}
+  .nav a{font-family:'Shantell Sans',cursive;font-weight:500;font-size:16px;color:var(--graphite);transition:color .15s;position:relative;padding-bottom:5px}
+  .nav a:hover,.nav a.active{color:var(--pencil)}
+  .nav a:hover::after,.nav a.active::after{content:"";position:absolute;left:-2px;right:-2px;bottom:0;height:5px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='5' viewBox='0 0 40 5'%3E%3Cpath d='M0 3 Q5 0 10 3 T20 3 T30 3 T40 3' fill='none' stroke='%23C2472F' stroke-width='1.3'/%3E%3C/svg%3E") repeat-x;background-size:40px 5px}
 
-  /* Hero */
-  .cs-hero { padding:56px 0 36px; }
-  .label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
-  .cs-hero h1 { font-family:'DM Serif Display',serif; font-size:clamp(42px,7vw,66px); line-height:1.03; font-weight:400; margin-bottom:20px; }
-  .cs-hero .lead { font-size:clamp(16px,2.2vw,19px); color:var(--text); max-width:660px; }
-  .cs-photo-wide { margin:34px 0 0; padding:8px; background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent); border-radius:4px; box-shadow:0 24px 55px rgba(0,0,0,0.5); }
-  .cs-photo-wide img { width:100%; height:auto; display:block; border-radius:2px; }
-  .cs-photo-wide figcaption { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); margin-top:10px; padding:2px 4px; }
+  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:14px;padding:13px 22px;border-radius:9px;transition:.16s;line-height:1;cursor:pointer;border:1.5px solid transparent}
+  .btn.go{background:var(--pencil);color:#fff;box-shadow:0 6px 18px rgba(194,71,47,.28)}
+  .btn.go:hover{background:#a83a24;transform:translateY(-2px);box-shadow:0 10px 24px rgba(194,71,47,.34)}
+  .btn.outline{background:var(--card);border-color:var(--ink);color:var(--ink)}
+  .btn.outline:hover{background:var(--ink);color:var(--paper);transform:translateY(-2px)}
+  .btn.sm{font-size:13px;padding:10px 16px;border-radius:8px}
 
-  .meta { display:flex; flex-wrap:wrap; gap:14px 40px; margin-top:32px; padding-top:26px; border-top:1px solid var(--border); }
-  .meta .m .k { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:4px; }
-  .meta .m .v { font-size:14px; color:var(--text); }
+  /* hero */
+  .cs-hero{padding:clamp(40px,6vw,64px) 0 30px}
+  .label{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--pencil);margin-bottom:16px}
+  .cs-hero h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(42px,7vw,72px);line-height:1;letter-spacing:-.03em;margin-bottom:18px}
+  .cs-hero .lead{font-size:clamp(16px,2.2vw,19px);color:var(--graphite);max-width:660px}
+  .cs-hero .lead b{color:var(--ink);font-weight:600}
+  .cs-photo-wide{margin:32px 0 0;padding:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 34px rgba(42,38,32,.16)}
+  .cs-photo-wide img{width:100%;height:auto;display:block;border-radius:6px}
+  .cs-photo-wide figcaption{font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--graphite);margin-top:10px;padding:2px 4px}
 
-  /* Sections */
-  section.block { padding:48px 0; border-top:1px solid var(--border); }
-  .sec-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:22px; }
-  .sec-label span { color:var(--accent); }
-  h2.sec { font-family:'DM Serif Display',serif; font-size:clamp(25px,4vw,34px); font-weight:400; line-height:1.15; margin-bottom:20px; }
-  h3.sub { font-family:'DM Sans',sans-serif; font-weight:600; font-size:18px; color:#fff; margin:34px 0 10px; padding-top:8px; }
-  h3.sub .n { font-family:'DM Mono',monospace; font-weight:500; font-size:13px; color:var(--accent); margin-right:10px; }
-  .prose p { font-size:15.5px; margin-bottom:14px; max-width:680px; }
-  .prose p:last-child { margin-bottom:0; }
-  .prose strong { font-weight:500; color:#fff; }
-  .lead-line { font-size:17px; color:var(--text); max-width:680px; margin-bottom:8px; }
+  .meta{display:flex;flex-wrap:wrap;gap:14px 40px;margin-top:30px;padding-top:24px;border-top:1px solid var(--line)}
+  .meta .m .k{font-family:'Spline Sans Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--graphite);display:block;margin-bottom:4px}
+  .meta .m .v{font-size:14px;color:var(--ink);font-weight:500}
 
-  ul.pts { list-style:none; max-width:680px; margin:6px 0 4px; }
-  ul.pts li { font-size:15px; padding:7px 0 7px 22px; position:relative; border-bottom:1px solid var(--border); }
-  ul.pts li:last-child { border-bottom:none; }
-  ul.pts li::before { content:'—'; position:absolute; left:0; color:var(--accent); }
-  ul.pts li b { font-weight:500; color:#fff; }
+  section.block{padding:clamp(40px,6vw,56px) 0;border-top:1px solid var(--line)}
+  .sec-label{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--graphite);margin-bottom:20px}
+  .sec-label span{color:var(--pencil)}
+  h2.sec{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(25px,4vw,36px);letter-spacing:-.02em;line-height:1.1;margin-bottom:18px}
+  h3.sub{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.01em;margin:34px 0 10px;padding-top:8px}
+  h3.sub .n{font-family:'Spline Sans Mono',monospace;font-weight:500;font-size:13px;color:var(--pencil);margin-right:10px}
+  .prose p{font-size:15.5px;margin-bottom:14px;max-width:680px;color:var(--graphite)}
+  .prose p:last-child{margin-bottom:0}
+  .prose strong{font-weight:600;color:var(--ink)}
+  .lead-line{font-size:17px;color:var(--ink);max-width:680px;margin-bottom:8px}
 
-  .spec { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:5px; overflow:hidden; margin:22px 0; max-width:680px; }
-  .spec .cell { background:var(--surface); padding:16px 18px; }
-  .spec .cell .k { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
-  .spec .cell .v { font-size:18px; font-family:'DM Mono',monospace; color:var(--accent); }
-  .spec .cell .v small { font-size:12px; color:var(--muted); display:block; margin-top:3px; font-family:'DM Sans'; letter-spacing:0; }
+  ul.pts{list-style:none;max-width:680px;margin:6px 0 4px}
+  ul.pts li{font-size:15px;padding:8px 0 8px 22px;position:relative;border-bottom:1px solid var(--line);color:var(--graphite)}
+  ul.pts li:last-child{border-bottom:none}
+  ul.pts li::before{content:'—';position:absolute;left:0;color:var(--pencil)}
+  ul.pts li b{font-weight:600;color:var(--ink)}
 
-  .chain { display:flex; flex-wrap:wrap; align-items:stretch; gap:8px; margin:22px 0; max-width:720px; }
-  .chain .stage { flex:1 1 120px; background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:12px; }
-  .chain .stage.hot { border-color:var(--accent); background:linear-gradient(135deg,rgba(232,196,74,0.08),transparent); }
-  .chain .stage .t { font-family:'DM Mono',monospace; font-size:12px; color:#fff; }
-  .chain .stage .d { font-size:11px; color:var(--muted); margin-top:4px; line-height:1.4; }
-  .chain .arrow { align-self:center; color:var(--muted); font-size:14px; }
+  .spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:22px 0;max-width:680px}
+  .spec .cell{background:var(--card);padding:16px 18px}
+  .spec .cell .k{font-family:'Spline Sans Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--graphite);margin-bottom:6px}
+  .spec .cell .v{font-size:18px;font-family:'Spline Sans Mono',monospace;color:var(--pencil)}
+  .spec .cell .v small{font-size:12px;color:var(--graphite);display:block;margin-top:3px;font-family:'Hanken Grotesk';letter-spacing:0}
 
-  .callout { border-left:3px solid var(--accent); background:linear-gradient(135deg,rgba(232,196,74,0.09),rgba(232,196,74,0.02)); padding:16px 20px; margin:22px 0; border-radius:0 3px 3px 0; max-width:680px; }
-  .callout.team { border-left-color:var(--blue); background:linear-gradient(135deg,rgba(90,143,224,0.10),rgba(90,143,224,0.02)); }
-  .callout .k { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:6px; }
-  .callout.team .k { color:var(--blue); }
-  .callout p { font-size:14.5px; margin:0; }
+  .chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:22px 0;max-width:720px}
+  .chain .stage{flex:1 1 120px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px}
+  .chain .stage.hot{border-color:var(--pencil);background:linear-gradient(135deg,rgba(194,71,47,.09),transparent)}
+  .chain .stage .t{font-family:'Spline Sans Mono',monospace;font-size:12px;color:var(--ink)}
+  .chain .stage .d{font-size:11px;color:var(--graphite);margin-top:4px;line-height:1.4}
+  .chain .arrow{align-self:center;color:var(--graphite);font-size:14px}
 
-  figure.fig { margin:26px 0; background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:12px; box-shadow:0 10px 30px rgba(0,0,0,0.32); }
-  figure.fig img { width:100%; height:auto; display:block; background:#141414; border:1px solid #363636; border-radius:3px; }
-  figure.fig figcaption { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.03em; color:var(--muted); margin-top:12px; padding:0 2px; line-height:1.55; }
-  figure.fig.light { background:#ececec; border-color:#d0d0d0; }
-  figure.fig.light img { background:#ececec; border-color:#d8d8d8; }
-  figure.fig.light figcaption { color:#565656; }
+  .callout{border-left:3px solid var(--pencil);background:linear-gradient(135deg,rgba(194,71,47,.09),rgba(194,71,47,.02));padding:16px 20px;margin:22px 0;border-radius:0 8px 8px 0;max-width:680px}
+  .callout.team{border-left-color:var(--blue);background:linear-gradient(135deg,rgba(59,107,134,.12),rgba(59,107,134,.02))}
+  .callout .k{font-family:'Spline Sans Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--pencil);display:block;margin-bottom:6px}
+  .callout.team .k{color:var(--blue)}
+  .callout p{font-size:14.5px;margin:0;color:var(--ink)}
 
-  table.dt { width:100%; border-collapse:collapse; margin:22px 0; font-size:14px; max-width:680px; }
-  table.dt caption { text-align:left; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
-  table.dt th, table.dt td { text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); }
-  table.dt thead th { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); font-weight:500; }
-  table.dt td.num { font-family:'DM Mono',monospace; color:var(--accent); }
-  table.dt tbody tr:last-child td { border-bottom:none; color:var(--muted); }
+  figure.fig{margin:26px 0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:0 10px 26px rgba(42,38,32,.1)}
+  figure.fig img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:7px}
+  figure.fig figcaption{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.02em;color:var(--graphite);margin-top:12px;padding:0 2px;line-height:1.55}
 
-  .takeaway { font-family:'DM Serif Display',serif; font-style:italic; font-size:clamp(17px,2.4vw,21px); line-height:1.4; color:var(--text); max-width:640px; margin:26px 0 6px; padding-left:20px; border-left:2px solid var(--accent); }
+  table.dt{width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;max-width:680px}
+  table.dt caption{text-align:left;font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--graphite);margin-bottom:12px}
+  table.dt th,table.dt td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line)}
+  table.dt thead th{font-family:'Spline Sans Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--graphite);font-weight:500}
+  table.dt td.num{font-family:'Spline Sans Mono',monospace;color:var(--pencil)}
+  table.dt tbody tr:last-child td{border-bottom:none;color:var(--graphite)}
 
-  .berries { display:grid; grid-template-columns:auto 1fr 1fr; gap:12px 14px; align-items:center; max-width:560px; margin:24px 0 12px; }
-  .b-col { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); text-align:center; }
-  .b-row { display:flex; flex-direction:column; gap:8px; align-items:flex-start; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.04em; text-transform:uppercase; color:var(--text); }
-  .uvtag { display:inline-flex; align-items:center; gap:6px; color:var(--accent); border:1px solid rgba(232,196,74,0.45); border-radius:20px; padding:3px 9px; font-size:10px; letter-spacing:0.08em; }
-  .uvtag svg { width:18px; height:7px; display:block; }
-  .b-cell { margin:0; background:var(--surface); border:1px solid var(--border); border-radius:5px; padding:8px; }
-  .b-cell img { width:100%; height:auto; display:block; border:1px solid #363636; border-radius:3px; }
-  .berry-note { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:0.03em; max-width:560px; line-height:1.6; }
+  .berries{display:grid;grid-template-columns:auto 1fr 1fr;gap:12px 14px;align-items:center;max-width:560px;margin:24px 0 12px}
+  .b-col{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--graphite);text-align:center}
+  .b-row{display:flex;flex-direction:column;gap:8px;align-items:flex-start;font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+  .uvtag{display:inline-flex;align-items:center;gap:6px;color:var(--pencil);border:1px solid rgba(194,71,47,.45);border-radius:20px;padding:3px 9px;font-size:10px;letter-spacing:.06em}
+  .uvtag svg{width:18px;height:7px;display:block}
+  .b-cell{margin:0;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px}
+  .b-cell img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:5px}
+  .berry-note{font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--graphite);letter-spacing:.02em;max-width:560px;line-height:1.6}
 
-  footer { border-top:1px solid var(--border); padding:44px 0 60px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:18px; align-items:center; }
-  footer .fnote { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:0.06em; }
-  footer a.btn { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; padding:13px 22px; border-radius:2px; background:var(--accent); color:#0d0d0d; font-weight:500; }
+  .sec-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(26px,4vw,34px);letter-spacing:-.02em;margin-bottom:12px}
+  .contact-lead{color:var(--graphite);max-width:560px;margin-bottom:22px}
+  .clinks{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:620px}
+  .clinks a{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--card);border:1px solid var(--line);border-radius:10px;font-weight:600;font-size:14px;transition:transform .15s,border-color .15s}
+  .clinks a:hover{transform:translateY(-2px);border-color:var(--pencil)}
+  .clinks a .ar{color:var(--pencil)}
 
-  .contact-lead { font-size:15px; color:var(--muted); max-width:560px; margin-bottom:20px; }
-  .contact-links { display:flex; flex-wrap:wrap; gap:14px; }
-  .contact-links a { font-family:'DM Mono',monospace; font-size:13px; color:var(--text); text-decoration:none; border-bottom:1px solid var(--border); padding-bottom:2px; transition:border-color 0.2s; }
-  .contact-links a:hover { border-color:var(--accent); }
+  footer.foot{border-top:1px solid var(--line);padding:24px 0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:center}
+  footer .fnote{font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--graphite);letter-spacing:.05em}
 
-  @media (max-width:760px) { .chain .arrow { display:none; } }
+  @media(max-width:900px){.tool{display:none}}
+  @media(max-width:760px){.chain .arrow{display:none}}
+  @media(max-width:560px){.clinks{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="grain"></div>
 
-<nav class="nav">
-  <a href="index.html" class="brand">Aidan Crouso</a>
-  <div class="links">
-    <a href="index.html#work">Home</a>
-    <a href="experience.html">Experience</a>
-    <a href="inspiration.html">Inspiration</a>
+<div class="desk" aria-hidden="true"></div>
+<div class="frame" aria-hidden="true"><i class="t"></i><i class="b"></i><i class="l"></i><i class="r"></i></div>
+<div class="desk-objects" aria-hidden="true">
+  <div class="tool" style="top:12%;right:3%"><svg width="215" height="120" viewBox="0 0 215 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="12" y="46" width="176" height="12" rx="2"/><path d="M32 58 V96 H44 V58"/><path d="M32 46 V16 H42 V46"/><rect x="120" y="34" width="18" height="66" rx="2"/><path d="M129 100 V110"/><line x1="188" y1="52" x2="210" y2="52"/></svg></div>
+  <div class="tool" style="top:34%;left:3%"><svg width="80" height="130" viewBox="0 0 80 130" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M24 16 L56 16 L64 30 L56 44 L24 44 L16 30 Z"/><rect x="34" y="44" width="12" height="66" rx="1"/><path d="M34 54 h12 M34 62 h12 M34 70 h12 M34 78 h12 M34 86 h12 M34 94 h12"/></svg></div>
+  <div class="tool" style="top:56%;right:4%"><svg width="210" height="70" viewBox="0 0 210 70" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><line x1="22" y1="16" x2="22" y2="58"/><line x1="188" y1="16" x2="188" y2="58"/><line x1="22" y1="40" x2="188" y2="40"/><path d="M22 40 l11 -5 m-11 5 l11 5"/><path d="M188 40 l-11 -5 m11 5 l-11 5"/></svg></div>
+  <div class="tool" style="top:80%;left:3%"><svg width="165" height="95" viewBox="0 0 165 95" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 84 A70 70 0 0 1 152 84 Z"/><path d="M40 84 A42 42 0 0 1 124 84"/><line x1="82" y1="84" x2="82" y2="20"/><circle cx="82" cy="84" r="3"/></svg></div>
+  <div class="tool" style="top:23%;left:3%"><svg width="244" height="112" viewBox="0 0 244 112" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M14 84 C14 71 22 67 34 66 L70 45 C80 39 92 38 104 38 L152 38 C172 38 184 49 198 65 L216 69 C226 71 228 75 228 84"/><line x1="14" y1="84" x2="228" y2="84"/><path d="M78 45 L100 45 L100 38"/><path d="M112 38 L112 63 M152 38 L152 63"/><path d="M100 45 L188 45"/><circle cx="66" cy="86" r="17"/><circle cx="180" cy="86" r="17"/><circle cx="66" cy="86" r="6"/><circle cx="180" cy="86" r="6"/></svg></div>
+  <div class="tool" style="top:68%;right:3%"><svg width="170" height="60" viewBox="0 0 170 60" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><circle cx="30" cy="30" r="18"/><circle cx="30" cy="30" r="9"/><path d="M46 24 L120 24 M46 36 L120 36"/><path d="M120 16 L150 16 L150 24 L134 30 L150 36 L150 44 L120 44 Z"/></svg></div>
+</div>
+
+<header class="bar">
+  <div class="bar-in">
+   <div class="navbox">
+    <a href="index.html" class="mark">Aidan Crouso</a>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="experience.html">Experience</a>
+      <a href="index.html#work" class="active">Work</a>
+      <a href="inspiration.html">Inspiration</a>
+      <a href="assets/Aidan_Crouso_Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+    </nav>
+   </div>
   </div>
-</nav>
+</header>
 
 <div class="wrap">
 
@@ -137,7 +174,7 @@
   <header class="cs-hero">
     <div class="label">Case Study · Consumer Product</div>
     <h1>UV Food Storage</h1>
-    <p class="lead">A UV-C lid that slows produce spoilage inside an ordinary glass container. I owned the battery and charging system, the part that lets it run for weeks on a single wireless charge.</p>
+    <p class="lead">A UV-C lid that slows produce spoilage inside an ordinary glass container. I owned the <b>battery and charging system</b>, the part that lets it run for weeks on a single wireless charge.</p>
     <figure class="cs-photo-wide">
       <img src="images/uv-case-study/Uv_container_glow.jpg" alt="The prototype mid-cycle: the sealed glass container glows blue from the UV-C light inside" width="1400" height="1050">
       <figcaption>Mid-cycle: UV-C fills the sealed container.</figcaption>
@@ -163,7 +200,7 @@
       <li><b>No cables, no contacts.</b> A device that lives in a fridge and gets handled daily shouldn't have exposed charging pins or a cord per unit. That pointed straight at wireless charging.</li>
       <li><b>No manual required.</b> The team built a two-button interface that communicates everything with light, so a first-time user can run a cycle without instructions.</li>
     </ul>
-    <figure class="fig light">
+    <figure class="fig">
       <img src="images/uv-case-study/UV_container_cad.jpg" alt="CAD render of the lid above the glass container" width="1000" height="1240">
       <figcaption>All function integrates into the lid. The container stays an ordinary glass vessel.</figcaption>
     </figure>
@@ -292,24 +329,25 @@
     </div>
   </section>
 
-  <!-- GET IN TOUCH -->
+  <!-- CONTACT -->
   <section class="block" id="contact">
     <div class="sec-label"><span>04</span> — Contact</div>
-    <h2 class="sec">Get in touch.</h2>
+    <h2 class="sec-title">Get in touch.</h2>
     <p class="contact-lead">Open to conversations about consumer hardware, mechanisms, and exterior systems.</p>
-    <div class="contact-links">
-      <a href="mailto:ajcrouso@gmail.com">ajcrouso@gmail.com</a>
-      <a href="https://www.linkedin.com/in/ajcrouso/" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a href="https://github.com/ajcrouso" target="_blank" rel="noopener">GitHub ↗</a>
-      <a href="assets/Aidan_Crouso_Resume.pdf" target="_blank" rel="noopener">Résumé (PDF) ↗</a>
+    <div class="clinks">
+      <a href="mailto:ajcrouso@gmail.com">ajcrouso@gmail.com <span class="ar">→</span></a>
+      <a href="https://www.linkedin.com/in/ajcrouso/" target="_blank" rel="noopener">LinkedIn <span class="ar">↗</span></a>
+      <a href="https://github.com/ajcrouso" target="_blank" rel="noopener">GitHub <span class="ar">↗</span></a>
+      <a href="assets/Aidan_Crouso_Resume.pdf" target="_blank" rel="noopener">Résumé, PDF <span class="ar">↗</span></a>
     </div>
   </section>
 
-  <footer>
+  <footer class="foot">
     <span class="fnote">© 2026 Aidan Crouso · UV Food Storage Case Study</span>
-    <a href="index.html" class="btn">← Back home</a>
+    <a href="index.html" class="btn go sm">← Back home</a>
   </footer>
 
 </div>
+
 </body>
 </html>

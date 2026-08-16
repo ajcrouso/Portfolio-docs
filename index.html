@@ -3,310 +3,406 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Aidan Crouso — mechanical design engineer in automotive exterior design. Projects, experience, and the thinking behind the work.">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>Aidan Crouso — Mechanical Engineer</title>
+<title>Aidan Crouso — Long Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=Shantell+Sans:wght@500;600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+  :root{
+    --paper:#EDE7D8;--paper-2:#E4DCC8;--card:#FBF8EF;--ink:#2A2620;--graphite:#6E6A5E;
+    --line:#D6CEB8;--grid:#E1D9C4;--pencil:#C2472F;--blue:#3B6B86;--maxw:clamp(1060px,86vw,1520px);
+    --tick-m:rgba(42,38,32,.18);--tick-M:rgba(42,38,32,.42);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative}
+  a{color:inherit;text-decoration:none}
+  .disp{font-family:'Bricolage Grotesque',sans-serif}.hand{font-family:'Shantell Sans',cursive}.mono{font-family:'Spline Sans Mono',monospace}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,44px);position:relative;z-index:2}
+  .kick{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--pencil)}
 
-  :root {
-    --bg: #0d0d0d;
-    --surface: #141414;
-    --surface2: #1c1c1c;
-    --border: #2a2a2a;
-    --accent: #e8c44a;
-    --accent2: #c0392b;
-    --text: #e8e4dc;
-    --muted: #888;
-    --green: #4caf7d;
-    --blue: #5a8fe0;
-  }
+  /* ============ THE DESK ============ */
+  /* fixed paper/grid surface — the desk itself */
+  .desk{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:30px 30px}
+  .desk::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 30%,rgba(237,231,216,.25),rgba(237,231,216,.7))}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* objects scattered down the length of the desk — static, no drift.
+     you scroll down the desk and pass tools as you go */
+  .desk-objects{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+  .tool{position:absolute;color:var(--graphite);opacity:.32}
+  .stick{position:absolute;font-family:'Shantell Sans',cursive;font-weight:500;font-size:15px;color:#4A422A;background:#F2E9B8;
+    padding:10px 15px;border-radius:5px;box-shadow:0 6px 16px rgba(42,38,32,.12);max-width:170px;line-height:1.35;opacity:.96}
+  .stick::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%) rotate(-4deg);
+    width:46px;height:15px;background:rgba(214,206,184,.75);border-radius:1px}
 
-  html { scroll-behavior: smooth; }
+  /* ruler tick-frame around the window — count scales with window size */
+  .frame{position:fixed;inset:0;z-index:40;pointer-events:none}
+  .frame i{position:absolute;display:block}
+  .frame .t,.frame .b{left:0;right:0;height:13px;
+    background-image:repeating-linear-gradient(90deg,var(--tick-M) 0 1px,transparent 1px 60px),repeating-linear-gradient(90deg,var(--tick-m) 0 1px,transparent 1px 12px)}
+  .frame .t{top:0;border-bottom:1px solid var(--line)}
+  .frame .b{bottom:0;border-top:1px solid var(--line)}
+  .frame .l,.frame .r{top:0;bottom:0;width:13px;
+    background-image:repeating-linear-gradient(0deg,var(--tick-M) 0 1px,transparent 1px 60px),repeating-linear-gradient(0deg,var(--tick-m) 0 1px,transparent 1px 12px)}
+  .frame .l{left:0;border-right:1px solid var(--line)}
+  .frame .r{right:0;border-left:1px solid var(--line)}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    line-height: 1.7;
-    min-height: 100vh;
-  }
+  /* ============ HEADER — handwritten, part of the desk ============ */
+  header.bar{position:relative;z-index:20;background:transparent}
+  .bar-in{max-width:var(--maxw);margin:0 auto;padding:16px clamp(20px,5vw,44px) 0}
+  .navbox{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 24px;padding-bottom:13px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='4' viewBox='0 0 80 4'%3E%3Cpath d='M0 2 Q20 1 40 2 T80 2' fill='none' stroke='%236E6A5E' stroke-opacity='0.55' stroke-width='1.1'/%3E%3C/svg%3E");background-repeat:repeat-x;background-position:left bottom;background-size:80px 4px}
+  .mark{font-family:'Shantell Sans',cursive;font-weight:600;font-size:24px;color:var(--ink);line-height:1;transform:rotate(-1.5deg)}
+  .nav{display:flex;gap:6px 20px;align-items:center;flex-wrap:wrap}
+  .nav a{font-family:'Shantell Sans',cursive;font-weight:500;font-size:16px;color:var(--graphite);transition:color .15s;position:relative;padding-bottom:5px}
+  .nav a:hover,.nav a.active{color:var(--pencil)}
+  .nav a:hover::after,.nav a.active::after{content:"";position:absolute;left:-2px;right:-2px;bottom:0;height:5px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='5' viewBox='0 0 40 5'%3E%3Cpath d='M0 3 Q5 0 10 3 T20 3 T30 3 T40 3' fill='none' stroke='%23C2472F' stroke-width='1.3'/%3E%3C/svg%3E") repeat-x;background-size:40px 5px}
 
-  .grain {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 0; opacity: 0.4;
-  }
+  /* ============ BUTTONS ============ */
+  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:14px;padding:13px 22px;border-radius:9px;transition:.16s;line-height:1;cursor:pointer;border:1.5px solid transparent}
+  .btn.solid{background:var(--ink);color:var(--paper)}
+  .btn.solid:hover{background:#000;transform:translateY(-2px)}
+  /* page-navigation buttons — the emphasized "go to another page" style */
+  .btn.go{background:var(--pencil);color:#fff;box-shadow:0 6px 18px rgba(194,71,47,.28)}
+  .btn.go:hover{background:#a83a24;transform:translateY(-2px);box-shadow:0 10px 24px rgba(194,71,47,.34)}
+  .btn.outline{background:var(--card);border-color:var(--ink);color:var(--ink)}
+  .btn.outline:hover{background:var(--ink);color:var(--paper);transform:translateY(-2px)}
+  .btn.sm{font-size:13px;padding:10px 16px;border-radius:8px}
 
-  /* ---- Top navigation ---- */
-  .nav {
-    position: sticky; top: 0; z-index: 10;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 32px;
-    background: rgba(13,13,13,0.85);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav .brand {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--accent);
-  }
-  .nav .links { display: flex; gap: 24px; }
-  .nav .links a {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--muted); text-decoration: none; transition: color 0.2s;
-  }
-  .nav .links a:hover { color: var(--text); }
+  /* ============ HERO ============ */
+  .hero{padding:clamp(54px,9vw,104px) 0 clamp(40px,6vw,72px)}
+  .hero-grid{display:grid;grid-template-columns:1fr 260px;gap:clamp(30px,5vw,60px);align-items:center}
+  .hero .chip{display:inline-flex;align-items:center;gap:8px;font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--graphite);margin-bottom:22px}
+  .hero .chip .led{width:7px;height:7px;border-radius:50%;background:var(--pencil)}
+  .hero h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(38px,7vw,80px);line-height:.98;letter-spacing:-.025em;max-width:15ch}
+  .hero h1 .p{color:var(--pencil);font-style:italic}
+  .hero .lede{margin-top:24px;max-width:52ch;font-size:clamp(16px,1.5vw,19px);color:var(--graphite)}
+  .hero .lede b{color:var(--ink);font-weight:600}
+  .hero .sub{margin-top:14px;max-width:52ch;color:var(--graphite);font-size:15px}
+  .hero .cta{margin-top:30px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  /* tilted desk photo */
+  .photo{position:relative;background:#fff;padding:12px 12px 44px;border-radius:3px;box-shadow:0 18px 40px rgba(42,38,32,.22);transform:rotate(2.2deg);border:1px solid #e7e2d4}
+  .photo::before{content:"";position:absolute;top:-13px;left:50%;transform:translateX(-50%) rotate(-3deg);width:96px;height:26px;background:rgba(214,206,184,.72);border:1px solid rgba(180,170,145,.4);border-radius:1px}
+  .photo img{width:100%;height:auto;display:block;aspect-ratio:2/3;object-fit:cover;border-radius:1px}
+  .photo figcaption{font-family:'Shantell Sans',cursive;font-size:14px;color:#5a5340;text-align:center;position:absolute;left:0;right:0;bottom:14px}
 
-  .wrap { max-width: 900px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+  /* ============ SECTIONS ============ */
+  section{padding:clamp(46px,7vw,84px) 0}
+  .sec-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(26px,3.6vw,40px);letter-spacing:-.02em;margin:12px 0 6px}
+  .sec-sub{color:var(--graphite);max-width:58ch;margin-bottom:36px}
+  .sec-foot{margin-top:26px}
 
-  /* ---- Hero ---- */
-  .hero { padding: 100px 0 80px; }
-  .hero-inner {
-    display: grid; grid-template-columns: 1fr 280px;
-    gap: 52px; align-items: center;
-  }
-  .hero-photo {
-    position: relative;
-    padding: 8px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--accent);
-    border-radius: 4px;
-    box-shadow: 0 24px 55px rgba(0,0,0,0.5);
-  }
-  .hero-photo img {
-    width: 100%; height: auto; display: block;
-    aspect-ratio: 2 / 3; object-fit: cover;
-    border-radius: 2px;
-  }
-  .label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 20px;
-  }
-  .hero h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(38px, 7vw, 68px);
-    line-height: 1.05; font-weight: 400; margin-bottom: 24px;
-  }
-  .hero h1 em { font-style: italic; color: var(--accent); }
-  .hero .tagline {
-    font-size: clamp(17px, 2.5vw, 21px);
-    color: var(--text); max-width: 620px; margin-bottom: 36px;
-  }
-  .hero .sub { color: var(--muted); font-size: 15px; max-width: 620px; }
+  /* TIMELINE */
+  .tl{position:relative;padding-left:30px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .node{position:relative;padding:12px 0 24px}
+  .node::before{content:"";position:absolute;left:-30px;top:20px;width:12px;height:12px;border-radius:50%;background:var(--card);border:2px solid var(--graphite)}
+  .node.now::before{border-color:var(--pencil);background:var(--pencil);box-shadow:0 0 0 4px rgba(194,71,47,.15)}
+  .node .date{font-family:'Spline Sans Mono',monospace;font-size:12px;color:var(--pencil);letter-spacing:.04em}
+  .node h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:clamp(18px,2vw,23px);letter-spacing:-.01em;margin:5px 0 3px}
+  .node .org{font-size:14px;color:var(--graphite)}
+  .node .org b{color:var(--ink);font-weight:600}
 
-  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    font-family: 'DM Mono', monospace; font-size: 12px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    text-decoration: none; padding: 14px 24px; border-radius: 2px;
-    transition: transform 0.15s, background 0.2s;
-  }
-  .btn:hover { transform: translateY(-2px); }
-  .btn.primary { background: var(--accent); color: #0d0d0d; font-weight: 500; }
-  .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
-  .btn.ghost:hover { border-color: var(--muted); }
+  /* WORK — feature */
+  .feature{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:grid;grid-template-columns:1.1fr 1fr;box-shadow:0 8px 26px rgba(42,38,32,.08)}
+  .feature .img{position:relative;min-height:320px;background:#12121a;display:flex;align-items:flex-end}
+  .feature .img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .feature .img .tag{position:relative;z-index:2;margin:14px;font-family:'Spline Sans Mono',monospace;font-size:10px;letter-spacing:.06em;color:rgba(255,255,255,.9);background:rgba(0,0,0,.4);padding:5px 9px;border-radius:5px;backdrop-filter:blur(3px)}
+  .feature .body{padding:clamp(24px,3vw,38px);display:flex;flex-direction:column;justify-content:center}
+  .feature .st{display:inline-flex;align-items:center;gap:7px;font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--pencil);margin-bottom:14px}
+  .feature .st .dot{width:7px;height:7px;border-radius:50%;background:var(--pencil)}
+  .feature h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(24px,3vw,34px);letter-spacing:-.02em;margin-bottom:12px}
+  .feature p{color:var(--graphite);font-size:15px;margin-bottom:20px;max-width:48ch}
+  .feature .tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:22px}
+  .feature .tags span{font-family:'Spline Sans Mono',monospace;font-size:10px;letter-spacing:.04em;color:var(--graphite);border:1px solid var(--line);border-radius:14px;padding:4px 10px}
+  .work-note{margin-top:20px;font-family:'Spline Sans Mono',monospace;font-size:12px;color:var(--graphite);display:flex;align-items:center;gap:9px}
+  .work-note::before{content:"";width:22px;height:1px;background:var(--line)}
 
-  /* ---- Section shell ---- */
-  section.block { padding: 56px 0; border-top: 1px solid var(--border); }
-  .sec-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 28px;
-  }
-  .sec-label span { color: var(--accent); }
-  h2.sec {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(26px, 4vw, 36px); font-weight: 400;
-    line-height: 1.2; margin-bottom: 24px;
-  }
-  .prose p { font-size: 16px; margin-bottom: 16px; max-width: 680px; }
-  .prose p:last-child { margin-bottom: 0; }
+  /* PRACTICE */
+  .prac-wrap{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(24px,3vw,40px);box-shadow:0 8px 26px rgba(42,38,32,.05)}
+  .note{font-family:'Shantell Sans',cursive;font-weight:500;font-size:15px;color:#4A422A;background:#F2E9B8;display:inline-block;padding:9px 15px;border-radius:6px;transform:rotate(-1deg);margin-bottom:26px}
+  .prac{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 40px}
+  .prac .it h4{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:19px;margin-bottom:6px;letter-spacing:-.01em}
+  .prac .it p{font-size:14px;color:var(--graphite)}
+  .sub-label{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite);margin:36px 0 18px;padding-top:26px;border-top:1px solid var(--line)}
+  .toolkit{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .tk{border:1px solid var(--line);border-radius:11px;padding:20px;background:var(--paper)}
+  .tk h4{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--pencil);margin-bottom:12px}
+  .tk ul{list-style:none}
+  .tk li{font-size:13.5px;padding:6px 0;border-bottom:1px solid var(--line);display:flex;gap:8px;color:var(--ink)}
+  .tk li:last-child{border-bottom:none}
+  .tk li::before{content:"–";color:var(--graphite);flex-shrink:0}
 
-  /* ---- Skills ---- */
-  .skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
-  .skill-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-top: 3px solid var(--accent); border-radius: 2px; padding: 24px;
-  }
-  .skill-card h3 {
-    font-family: 'DM Mono', monospace; font-size: 11px;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 14px;
-  }
-  .skill-card ul { list-style: none; }
-  .skill-card li {
-    font-size: 14px; padding: 6px 0; border-bottom: 1px solid var(--border);
-    display: flex; gap: 10px;
-  }
-  .skill-card li:last-child { border-bottom: none; }
-  .skill-card li::before { content: '—'; color: var(--muted); flex-shrink: 0; }
+  /* INSPIRATION */
+  .insp .q{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:clamp(28px,4.6vw,54px);letter-spacing:-.02em;line-height:1.1;max-width:20ch;margin-top:14px}
+  .insp .q .p{color:var(--pencil)}
+  .insp .attr{font-family:'Spline Sans Mono',monospace;font-size:12px;color:var(--graphite);margin-top:20px;letter-spacing:.03em}
+  .shelf{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px;max-width:760px}
+  .shelf .bk{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:12px 16px;font-size:13.5px}
+  .shelf .bk b{font-weight:600;display:block}
+  .shelf .bk span{font-family:'Spline Sans Mono',monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--graphite)}
 
-  /* ---- Projects ---- */
-  .project {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 2px; padding: 32px; margin-bottom: 20px;
-    display: grid; grid-template-columns: 160px 1fr; gap: 28px; align-items: start;
-  }
-  a.project {
-    text-decoration: none; color: inherit;
-    transition: border-color 0.2s, transform 0.15s;
-  }
-  a.project:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .thumb-img { padding: 0; border: 1px solid var(--border); overflow: hidden; }
-  .thumb-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .project .thumb {
-    background: var(--surface2); border: 1px dashed var(--border);
-    border-radius: 2px; aspect-ratio: 1; display: flex;
-    align-items: center; justify-content: center; text-align: center;
-    font-family: 'DM Mono', monospace; font-size: 10px;
-    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 12px;
-  }
-  .project h3 {
-    font-family: 'DM Serif Display', serif; font-size: 22px;
-    font-weight: 400; margin-bottom: 6px;
-  }
-  .project .kicker {
-    font-family: 'DM Mono', monospace; font-size: 11px;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 14px;
-  }
-  .project p { font-size: 15px; margin-bottom: 14px; }
-  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
-  .tag {
-    font-family: 'DM Mono', monospace; font-size: 10px;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--muted); border: 1px solid var(--border);
-    padding: 4px 10px; border-radius: 2px;
-  }
+  /* CONTACT */
+  .contact h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(30px,5vw,58px);letter-spacing:-.02em;line-height:1;margin-bottom:10px}
+  .contact .lead{color:var(--graphite);max-width:52ch;margin-bottom:28px}
+  .clinks{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:640px}
+  .clinks a{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;background:var(--card);border:1px solid var(--line);border-radius:10px;font-weight:600;font-size:14px;transition:transform .15s,border-color .15s}
+  .clinks a:hover{transform:translateY(-2px);border-color:var(--pencil)}
+  .clinks a .ar{color:var(--pencil)}
 
-  /* ---- Roadmap feature card ---- */
-  .roadmap-feature {
-    background: linear-gradient(135deg, rgba(232,196,74,0.08), rgba(232,196,74,0.02));
-    border: 1px solid var(--border); border-left: 3px solid var(--accent);
-    border-radius: 2px; padding: 40px;
-    display: flex; flex-wrap: wrap; align-items: center;
-    justify-content: space-between; gap: 24px;
-  }
-  .roadmap-feature h2 {
-    font-family: 'DM Serif Display', serif; font-size: 26px;
-    font-weight: 400; margin-bottom: 10px;
-  }
-  .roadmap-feature p { font-size: 15px; color: var(--muted); max-width: 460px; }
+  footer.foot{border-top:1px solid var(--line);padding:24px 0;margin-top:10px}
+  .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--graphite)}
 
-  /* ---- Contact ---- */
-  .contact-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
-  .contact-links a {
-    font-family: 'DM Mono', monospace; font-size: 13px;
-    color: var(--text); text-decoration: none;
-    border-bottom: 1px solid var(--border); padding-bottom: 2px; transition: border-color 0.2s;
+  @media(max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:36px}
+    .photo{max-width:230px;order:-1}
+    .feature{grid-template-columns:1fr}.feature .img{min-height:220px}
+    .prac{grid-template-columns:1fr}.toolkit{grid-template-columns:1fr}
+    .clinks{grid-template-columns:1fr}
   }
-  .contact-links a:hover { border-color: var(--accent); }
-
-  footer { border-top: 1px solid var(--border); padding: 40px 0 60px; }
-  .footer-nav { display: flex; flex-wrap: wrap; gap: 22px; margin-bottom: 16px; }
-  .footer-nav a {
-    font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--text); text-decoration: none;
-    border-bottom: 1px solid var(--border); padding-bottom: 3px; transition: border-color 0.2s;
-  }
-  .footer-nav a:hover { border-color: var(--accent); }
-  .footer-copy {
-    font-family: 'DM Mono', monospace; font-size: 11px;
-    color: var(--muted); letter-spacing: 0.08em;
-  }
-
-  /* ---- Responsive ---- */
-  @media (max-width: 760px) {
-    .hero-inner { grid-template-columns: 1fr; gap: 36px; }
-    .hero-photo { order: -1; max-width: 220px; }
-  }
-  @media (max-width: 640px) {
-    .nav .links { gap: 16px; }
-    .nav .links a.hide-sm { display: none; }
-    .project { grid-template-columns: 1fr; }
-    .project .thumb { aspect-ratio: 16/9; }
-  }
+  @media(max-width:820px){.desk-objects{display:none}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
 </style>
 </head>
 <body>
-<div class="grain"></div>
 
-<nav class="nav">
-  <span class="brand">Aidan Crouso</span>
-  <div class="links">
-    <a href="#about">About</a>
-    <a href="#skills" class="hide-sm">Expertise</a>
-    <a href="#work">Work</a>
-    <a href="experience.html">Experience</a>
-    <a href="inspiration.html" class="hide-sm">Inspiration</a>
-    <a href="#contact">Contact</a>
+<!-- ============ THE DESK: fixed grid surface ============ -->
+<div class="desk" aria-hidden="true"></div>
+
+<!-- ruler tick-frame around the window -->
+<div class="frame" aria-hidden="true"><i class="t"></i><i class="b"></i><i class="l"></i><i class="r"></i></div>
+
+<!-- ============ THE DESK: tools scattered down its length ============ -->
+<div class="desk-objects" aria-hidden="true">
+
+  <!-- concept scribble -->
+  <div class="tool" style="top:5%;right:3%">
+    <svg width="200" height="120" viewBox="0 0 200 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M10 100 C 40 20, 120 10, 190 70"/><path d="M20 110 C 60 60, 110 60, 170 100"/><path d="M120 24 l14 -6 m-14 6 l6 13"/></svg>
   </div>
-</nav>
 
-<div class="wrap">
+  <!-- calipers -->
+  <div class="tool" style="top:15%;right:4%">
+    <svg width="215" height="120" viewBox="0 0 215 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="12" y="46" width="176" height="12" rx="2"/><path d="M32 58 V96 H44 V58"/><path d="M32 46 V16 H42 V46"/><rect x="120" y="34" width="18" height="66" rx="2"/><path d="M129 100 V110"/><line x1="188" y1="52" x2="210" y2="52"/></svg>
+  </div>
 
-  <!-- HERO -->
-  <header class="hero">
-    <div class="hero-inner">
-      <div class="hero-text">
-        <div class="label">Mechanical Design Engineer</div>
-        <h1>Mechanical engineering with a <em>product designer's eye.</em></h1>
-        <p class="tagline">I'm a mechanical engineer in automotive exterior design, focused on how a product looks, feels, and works in someone's hands.</p>
-        <p class="sub">This site documents my projects and the thinking behind them. Start with the UV food storage case study below.</p>
-        <div class="cta-row">
-          <a href="#work" class="btn primary">See the Work →</a>
-          <a href="#about" class="btn ghost">More About Me</a>
-        </div>
-      </div>
-      <div class="hero-photo">
-        <img src="assets/headshot.jpg" alt="Portrait of Aidan Crouso" width="600" height="900" loading="eager">
+  <!-- engineering dimension -->
+  <div class="tool" style="top:21%;left:3%">
+    <svg width="210" height="70" viewBox="0 0 210 70" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><line x1="22" y1="16" x2="22" y2="58"/><line x1="188" y1="16" x2="188" y2="58"/><line x1="22" y1="40" x2="188" y2="40"/><path d="M22 40 l11 -5 m-11 5 l11 5"/><path d="M188 40 l-11 -5 m11 5 l-11 5"/></svg>
+  </div>
+
+  <!-- set square -->
+  <div class="tool" style="top:27%;right:2%">
+    <svg width="150" height="130" viewBox="0 0 150 130" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M16 114 L134 114 L16 22 Z"/><path d="M34 104 L104 104 L34 44 Z"/></svg>
+  </div>
+
+  <!-- pencil -->
+  <div class="tool" style="top:32%;left:4%">
+    <svg width="185" height="54" viewBox="0 0 185 54" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><g transform="rotate(-8 92 27)"><path d="M28 18 H150 V34 H28 Z"/><path d="M150 18 L176 26 L150 34 Z"/><line x1="166" y1="26" x2="176" y2="26"/><path d="M28 18 H14 a8 8 0 0 0 0 16 H28"/><line x1="42" y1="18" x2="42" y2="34"/></g></svg>
+  </div>
+
+  <!-- tape measure -->
+  <div class="tool" style="top:38%;right:5%">
+    <svg width="160" height="120" viewBox="0 0 160 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="16" y="56" width="96" height="50" rx="16"/><circle cx="64" cy="81" r="7"/><path d="M112 72 H146"/><path d="M146 66 V78"/><path d="M112 90 H140"/></svg>
+  </div>
+
+  <!-- scissors -->
+  <div class="tool" style="top:44%;left:2%">
+    <svg width="120" height="135" viewBox="0 0 120 135" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="30" cy="104" r="14"/><circle cx="62" cy="104" r="14"/><path d="M38 94 L104 26"/><path d="M54 94 L104 42"/><circle cx="74" cy="74" r="3"/></svg>
+  </div>
+
+  <!-- coffee ring -->
+  <div class="tool" style="top:49%;right:3%">
+    <svg width="120" height="120" viewBox="0 0 120 120" fill="none" stroke="currentColor"><circle cx="60" cy="60" r="45" stroke-width="7" stroke-dasharray="11 7"/><circle cx="60" cy="60" r="34" stroke-width="1.5"/></svg>
+  </div>
+
+  <!-- protractor -->
+  <div class="tool" style="top:55%;left:3%">
+    <svg width="165" height="95" viewBox="0 0 165 95" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 84 A70 70 0 0 1 152 84 Z"/><path d="M40 84 A42 42 0 0 1 124 84"/><line x1="82" y1="84" x2="82" y2="20"/><circle cx="82" cy="84" r="3"/><line x1="40" y1="60" x2="49" y2="56"/><line x1="124" y1="60" x2="115" y2="56"/></svg>
+  </div>
+
+  <!-- perspective cube sketch -->
+  <div class="tool" style="top:61%;right:4%">
+    <svg width="130" height="120" viewBox="0 0 130 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M30 42 L82 30 L112 50 L60 64 Z"/><path d="M30 42 L30 90 L60 106 L60 64"/><path d="M60 64 L112 50 L112 96 L60 106"/></svg>
+  </div>
+
+  <!-- paper clip -->
+  <div class="tool" style="top:66%;left:2%">
+    <svg width="70" height="130" viewBox="0 0 70 130" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M30 22 V96 a15 15 0 0 0 30 0 V34 a23 23 0 0 0 -46 0 V90"/></svg>
+  </div>
+
+  <div class="stick" style="top:70%;right:3%;transform:rotate(3deg)">iterate → ship</div>
+
+  <!-- bolt / screw -->
+  <div class="tool" style="top:77%;left:4%">
+    <svg width="80" height="130" viewBox="0 0 80 130" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M24 16 L56 16 L64 30 L56 44 L24 44 L16 30 Z"/><rect x="34" y="44" width="12" height="66" rx="1"/><path d="M34 54 h12 M34 62 h12 M34 70 h12 M34 78 h12 M34 86 h12 M34 94 h12"/></svg>
+  </div>
+
+  <!-- french curve -->
+  <div class="tool" style="top:83%;right:4%">
+    <svg width="165" height="115" viewBox="0 0 165 115" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M22 82 C 10 40 62 12 104 26 C 146 40 156 74 124 94 C 96 112 74 74 62 82 C 50 90 36 98 22 82 Z"/><path d="M44 80 C 66 60 96 54 114 68"/></svg>
+  </div>
+
+  <!-- eraser -->
+  <div class="tool" style="top:88%;left:3%">
+    <svg width="120" height="80" viewBox="0 0 120 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><g transform="rotate(-10 60 40)"><rect x="14" y="26" width="92" height="34" rx="4"/><line x1="14" y1="41" x2="106" y2="41"/></g></svg>
+  </div>
+
+  <!-- ruler + push pin -->
+  <div class="tool" style="top:93%;right:5%">
+    <svg width="240" height="52" viewBox="0 0 240 52" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="6" y="16" width="228" height="22" rx="2"/><path d="M22 16 v14 M38 16 v9 M54 16 v14 M70 16 v9 M86 16 v14 M102 16 v9 M118 16 v14 M134 16 v9 M150 16 v14 M166 16 v9 M182 16 v14 M198 16 v9 M214 16 v14"/></svg>
+  </div>
+
+  <!-- ===== extra clutter — messier desk ===== -->
+
+  <!-- car sketch (for fun) -->
+  <div class="tool" style="top:11%;left:2%">
+    <svg width="244" height="112" viewBox="0 0 244 112" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M14 84 C14 71 22 67 34 66 L70 45 C80 39 92 38 104 38 L152 38 C172 38 184 49 198 65 L216 69 C226 71 228 75 228 84"/><line x1="14" y1="84" x2="228" y2="84"/><path d="M78 45 L100 45 L100 38"/><path d="M112 38 L112 63 M152 38 L152 63"/><path d="M100 45 L188 45"/><circle cx="66" cy="86" r="17"/><circle cx="180" cy="86" r="17"/><circle cx="66" cy="86" r="6"/><circle cx="180" cy="86" r="6"/></svg>
+  </div>
+
+  <!-- wrench -->
+  <div class="tool" style="top:24%;right:2%">
+    <svg width="170" height="60" viewBox="0 0 170 60" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><circle cx="30" cy="30" r="18"/><circle cx="30" cy="30" r="9"/><path d="M46 24 L120 24 M46 36 L120 36"/><path d="M120 16 L150 16 L150 24 L134 30 L150 36 L150 44 L120 44 Z"/></svg>
+  </div>
+
+  <div class="stick" style="top:34%;right:2.5%;transform:rotate(-2deg)">measure twice</div>
+
+  <!-- drafting compass -->
+  <div class="tool" style="top:46%;left:2%">
+    <svg width="92" height="132" viewBox="0 0 92 132" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><circle cx="46" cy="16" r="6"/><path d="M46 22 L18 114"/><path d="M46 22 L74 114"/><path d="M18 114 L13 124"/><path d="M74 110 L79 120"/></svg>
+  </div>
+
+  <div class="stick" style="top:52%;left:2%;transform:rotate(2deg)">does it feel right?</div>
+
+  <!-- extra scribble -->
+  <div class="tool" style="top:58%;left:4%">
+    <svg width="180" height="90" viewBox="0 0 180 90" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M8 60 C 40 10, 90 10, 120 50 S 160 80 172 40"/><path d="M20 74 C 50 50, 90 50, 120 70"/></svg>
+  </div>
+
+  <!-- hex nuts -->
+  <div class="tool" style="top:73%;right:2%">
+    <svg width="120" height="90" viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M30 18 L50 18 L60 35 L50 52 L30 52 L20 35 Z"/><circle cx="40" cy="35" r="7"/><path d="M70 38 L90 38 L100 55 L90 72 L70 72 L60 55 Z"/><circle cx="80" cy="55" r="7"/></svg>
+  </div>
+
+  <!-- bolt (extra, lower) -->
+  <div class="tool" style="top:97%;left:5%">
+    <svg width="80" height="120" viewBox="0 0 80 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M24 14 L56 14 L64 28 L56 42 L24 42 L16 28 Z"/><rect x="34" y="42" width="12" height="60" rx="1"/><path d="M34 52 h12 M34 60 h12 M34 68 h12 M34 76 h12 M34 84 h12 M34 92 h12"/></svg>
+  </div>
+
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="bar">
+  <div class="bar-in">
+   <div class="navbox">
+    <a href="index.html" class="mark">Aidan Crouso</a>
+    <nav class="nav">
+      <a href="#experience">Experience</a>
+      <a href="#work">Work</a>
+      <a href="#practice">Practice</a>
+      <a href="#inspiration">Inspiration</a>
+      <a href="#contact">Contact</a>
+      <a href="assets/Aidan_Crouso_Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+    </nav>
+   </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero"><div class="wrap">
+  <div class="hero-grid">
+    <div>
+      <span class="chip"><span class="led"></span>Mechanical Design Engineer · Columbus, OH</span>
+      <h1>Mechanical engineering with a <span class="p">product designer's eye.</span></h1>
+      <p class="lede">I'm a mechanical engineer in automotive exterior design. I take a styling concept and make it a production part, holding the <b>fit and finish</b> most people only notice when it's wrong.</p>
+      <p class="sub">This site documents my projects and the thinking behind them. It's a working file, added to as I ship. Start with the UV food storage case study.</p>
+      <div class="cta">
+        <a href="#work" class="btn solid">See the work →</a>
+        <a href="assets/Aidan_Crouso_Resume.pdf" target="_blank" rel="noopener" class="btn go">Full résumé ↗</a>
       </div>
     </div>
-  </header>
+    <figure class="photo">
+      <img src="assets/headshot.jpg" alt="Portrait of Aidan Crouso" width="600" height="900" loading="eager">
+      <figcaption>Aidan</figcaption>
+    </figure>
+  </div>
+</div></section>
 
-  <!-- ABOUT -->
-  <section class="block" id="about">
-    <div class="sec-label"><span>01</span> — About</div>
-    <h2 class="sec">Chasing what makes a product good.</h2>
-    <div class="prose">
-      <p>I'm a mechanical engineer on an automotive exterior design team, working across mirrors, wiper systems, garnishes, and glass. I turn the styling studio's concepts into production-ready 3D data, focused on the fit and finish that makes a product feel precise instead of careless. Ohio State ME, design thinking minor.</p>
-      <p>What pulls at me is product design: the small details that separate a good product from an average one. I like packaging electronics and interfaces into hardware that looks and feels resolved, and I study good design everywhere, from podcasts and books to an obsessive hunt for the right backpack or pair of headphones. Long term, I want to build consumer hardware that earns that kind of attention.</p>
+<!-- ============ EXPERIENCE ============ -->
+<section id="experience"><div class="wrap">
+  <span class="kick">01 — Experience</span>
+  <h2 class="sec-title">The path so far.</h2>
+  <p class="sec-sub">Two internships, a degree, and now full time. The short version is here; the full history and résumé have the detail.</p>
+  <div class="tl">
+    <div class="node"><div class="date">2024</div><h3>Honda — Engineering Intern</h3><div class="org">East Liberty, OH · Maintenance, stamping department</div></div>
+    <div class="node"><div class="date">2025</div><h3>Honda — Engineering Intern</h3><div class="org">Raymond, OH · Engine component design · high-volume design &amp; DFM</div></div>
+    <div class="node"><div class="date">May 2026</div><h3>B.S. Mechanical Engineering</h3><div class="org">The Ohio State University · <b>Cum Laude</b> · Design Thinking minor · GPA 3.5</div></div>
+    <div class="node now"><div class="date">Jul 2026 — Present</div><h3>Mechanical Design Engineer, Exterior Design</h3><div class="org"><b>Honda R&amp;D Americas</b> · mirrors, wipers, garnishes, glass</div></div>
+  </div>
+  <div class="sec-foot"><a href="experience.html" class="btn go">Full experience &amp; résumé →</a></div>
+</div></section>
+
+<!-- ============ WORK ============ -->
+<section id="work"><div class="wrap">
+  <span class="kick">02 — Selected Work</span>
+  <h2 class="sec-title">Projects, documented like products.</h2>
+  <p class="sec-sub">One live case study for now. Each project grows into a full write-up as it ships.</p>
+
+  <div class="feature">
+    <div class="img">
+      <img src="images/uv-case-study/Uv_container_glow.jpg" alt="UV Food Storage prototype glowing blue mid-cycle">
+      <span class="tag">UV-C LID · MID-CYCLE</span>
     </div>
-  </section>
+    <div class="body">
+      <span class="st"><span class="dot"></span>Case study live</span>
+      <h3>UV Food Storage</h3>
+      <p>A UV-C sanitizing lid that slows produce spoilage inside an ordinary glass container. Two-button interface, sealed dishwasher-safe body, weeks per charge. I owned the battery and inductive charging system.</p>
+      <div class="tags"><span>Design Thinking</span><span>CAD</span><span>Power system</span><span>Prototyping</span><span>User-centered</span></div>
+      <div><a href="uv-food-storage.html" class="btn go">Read the case study →</a></div>
+    </div>
+  </div>
 
-  <!-- SKILLS -->
-  <section class="block" id="skills">
-    <div class="sec-label"><span>02</span> — Expertise</div>
-    <h2 class="sec">What I bring to a hardware team.</h2>
-    <div class="skill-grid">
-      <div class="skill-card">
-        <h3>CAD &amp; Surfacing</h3>
+  <div class="work-note">New case studies land here as projects ship.</div>
+</div></section>
+
+<!-- ============ PRACTICE ============ -->
+<section id="practice"><div class="wrap">
+  <span class="kick">03 — Practice</span>
+  <h2 class="sec-title">What I do at Honda.</h2>
+  <p class="sec-sub">The day job, in method not parts.</p>
+  <div class="prac-wrap">
+    <span class="note">can't show the parts (NDA) — here's the work itself</span>
+    <div class="prac">
+      <div class="it"><h4>Class-A surfacing</h4><p>Rebuild a studio surface as clean, manufacturable geometry in CATIA V5 and V6.</p></div>
+      <div class="it"><h4>Fit &amp; finish</h4><p>Own the gaps, flush transitions, and seams where two parts meet the eye.</p></div>
+      <div class="it"><h4>Motion components</h4><p>Mirrors, wipers, and mechanisms that move cleanly across their full range.</p></div>
+      <div class="it"><h4>Studio → production</h4><p>Tolerance stacks, DFM, and the trade studies that get a concept to a moldable part.</p></div>
+    </div>
+
+    <div class="sub-label">The toolkit</div>
+    <div class="toolkit">
+      <div class="tk">
+        <h4>CAD &amp; Surfacing</h4>
         <ul>
           <li>CATIA V5 &amp; V6 (Class-A surfacing)</li>
           <li>Parametric solid modeling</li>
           <li>Exterior / enclosure design</li>
         </ul>
       </div>
-      <div class="skill-card">
-        <h3>Manufacturing</h3>
+      <div class="tk">
+        <h4>Manufacturing</h4>
         <ul>
           <li>Design for Manufacturing (DFM)</li>
           <li>Injection-molded plastics</li>
           <li>Glass &amp; motion mechanisms</li>
         </ul>
       </div>
-      <div class="skill-card">
-        <h3>Product &amp; Process</h3>
+      <div class="tk">
+        <h4>Product &amp; Process</h4>
         <ul>
           <li>Design Thinking (minor)</li>
           <li>Tolerance stack-up / GD&amp;T</li>
@@ -314,53 +410,34 @@
         </ul>
       </div>
     </div>
-  </section>
+  </div>
+</div></section>
 
-  <!-- WORK -->
-  <section class="block" id="work">
-    <div class="sec-label"><span>03</span> — Selected Work</div>
-    <h2 class="sec">Projects &amp; case studies.</h2>
+<!-- ============ INSPIRATION ============ -->
+<section id="inspiration"><div class="wrap insp">
+  <span class="kick">04 — Inspiration</span>
+  <p class="q">"Once you imitate, you <span class="p">imitate forever.</span>"</p>
+  <p class="attr">Soichiro Honda · Founder, Honda</p>
+  <div class="sec-foot"><a href="inspiration.html" class="btn go">The full list — books &amp; people →</a></div>
+</div></section>
 
-    <a class="project" href="uv-food-storage.html">
-      <div class="thumb thumb-img"><img src="assets/uv/uv-hero.jpg" alt="UV Food Storage prototype"></div>
-      <div>
-        <div class="kicker">Capstone · Consumer Product</div>
-        <h3>UV Food Storage</h3>
-        <p>A UV-C food storage lid that slows produce spoilage, built around a two-button interface anyone can use without a manual, and an inductive charging system I designed for real kitchens. <span style="color:var(--accent)">Read the case study →</span></p>
-        <div class="tags">
-          <span class="tag">Design Thinking</span>
-          <span class="tag">CAD</span>
-          <span class="tag">Prototyping</span>
-          <span class="tag">User-Centered</span>
-        </div>
-      </div>
-    </a>
-  </section>
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="contact"><div class="wrap">
+  <span class="kick">05 — Contact</span>
+  <h2 style="margin-top:12px">Let's talk hardware.</h2>
+  <p class="lead">Open to conversations about consumer hardware, mechanisms, and exterior systems.</p>
+  <div class="clinks">
+    <a href="mailto:ajcrouso@gmail.com">ajcrouso@gmail.com <span class="ar">→</span></a>
+    <a href="https://www.linkedin.com/in/ajcrouso/" target="_blank" rel="noopener">LinkedIn <span class="ar">↗</span></a>
+    <a href="https://github.com/ajcrouso" target="_blank" rel="noopener">GitHub <span class="ar">↗</span></a>
+    <a href="assets/Aidan_Crouso_Resume.pdf" target="_blank" rel="noopener">Résumé, PDF <span class="ar">↗</span></a>
+  </div>
+</div></section>
 
-  <!-- CONTACT -->
-  <section class="block" id="contact">
-    <div class="sec-label"><span>04</span> — Contact</div>
-    <h2 class="sec">Get in touch.</h2>
-    <div class="prose">
-      <p>Open to conversations about consumer hardware, mechanisms, and exterior systems.</p>
-    </div>
-    <div class="contact-links">
-      <a href="mailto:ajcrouso@gmail.com">ajcrouso@gmail.com</a>
-      <a href="https://www.linkedin.com/in/ajcrouso/" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a href="https://github.com/ajcrouso" target="_blank" rel="noopener">GitHub ↗</a>
-      <a href="assets/Aidan_Crouso_Resume.pdf" target="_blank" rel="noopener">Resume (PDF) ↗</a>
-    </div>
-  </section>
+<footer class="foot"><div class="wrap foot-in">
+  <span>© 2026 Aidan Crouso · Mechanical Engineer</span>
+  <span>Long Desk · a working file</span>
+</div></footer>
 
-  <footer>
-    <div class="footer-nav">
-      <a href="experience.html">Experience</a>
-      <a href="inspiration.html">Design Inspiration</a>
-      <a href="assets/Aidan_Crouso_Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
-    </div>
-    <div class="footer-copy">© 2026 Aidan Crouso · Mechanical Engineer · Built with GitHub Pages</div>
-  </footer>
-
-</div>
 </body>
 </html>
